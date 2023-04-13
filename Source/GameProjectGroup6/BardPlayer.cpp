@@ -85,8 +85,10 @@ void ABardPlayer::CombatFunction()
 {
 	if (WeaponNumber == 1)
 	{
+		
+		AActor* SpawnedFlute=GetWorld()->SpawnActor<AActor>(Flute, Position, FRotator::ZeroRotator);
+		SpawnedFlute->AttachToComponent(WeaponPosition, FAttachmentTransformRules::SnapToTargetIncludingScale);
 		//PlayAnimMontage(FluteAttack);
-		GetWorld()->SpawnActor<AActor>(Flute, Position, FRotator::ZeroRotator);
 		GEngine->AddOnScreenDebugMessage(0, 1.f, FColor::Emerald, "Flute");
 	}
 	if (WeaponNumber == 2)
