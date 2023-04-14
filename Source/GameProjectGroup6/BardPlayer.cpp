@@ -9,6 +9,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "WeaponBase.h"
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 // Sets default values
 ABardPlayer::ABardPlayer()
@@ -85,15 +87,21 @@ void ABardPlayer::CombatFunction()
 {
 	if (WeaponNumber == 1)
 	{
-		
-		AActor* SpawnedFlute=GetWorld()->SpawnActor<AActor>(Flute, Position, FRotator::ZeroRotator);
-		SpawnedFlute->AttachToComponent(WeaponPosition, FAttachmentTransformRules::SnapToTargetIncludingScale);
+		if (FluteSlash)
+		{
+			UNiagaraComponent* Slash = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), FluteSlash, GetActorLocation(),GetCharacterMovement()->GetLastUpdateRotation()-FRotator(0,90,0));
+			//Slash->
+		}
+	/*	AActor* SpawnedFlute=GetWorld()->SpawnActor<AActor>(Flute, Position, FRotator::ZeroRotator);
+		SpawnedFlute->AttachToComponent(WeaponPosition, FAttachmentTransformRules::SnapToTargetIncludingScale);*/
 		//PlayAnimMontage(FluteAttack);
 		GEngine->AddOnScreenDebugMessage(0, 1.f, FColor::Emerald, "Flute");
 	}
 	if (WeaponNumber == 2)
 	{
 		//PlayAnimMontage(DrumAttack);
+		if (DrumAOE)
+			UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), DrumAOE, GetActorLocation());
 		GEngine->AddOnScreenDebugMessage(0, 1.f, FColor::Red, "Drum");
 	}
 	if (WeaponNumber==3)

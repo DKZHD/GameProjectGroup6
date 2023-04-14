@@ -38,15 +38,21 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AWeaponBase> Harp;
 
+	//Systems
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class UNiagaraSystem* FluteSlash;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class UNiagaraSystem* DrumAOE;
+
 	//Input
 	UPROPERTY(EditAnywhere)
-	class UInputMappingContext* IMC;
+		class UInputMappingContext* IMC;
 	UPROPERTY(EditAnywhere)
-	class UInputAction* Move;
+		class UInputAction* Move;
 	UPROPERTY(EditAnywhere)
-	UInputAction* CombatAction;
+		UInputAction* CombatAction;
 	UPROPERTY(EditAnywhere)
-	UInputAction* SwapWeapon;
+		UInputAction* SwapWeapon;
 
 	//Functions
 	UFUNCTION()
