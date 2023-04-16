@@ -22,7 +22,7 @@ ABardPlayer::ABardPlayer()
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(GetRootComponent());
 	SpringArm->TargetArmLength = 800.f;
-	SpringArm->AddRelativeRotation(FRotator(-70.f, 25.f, 0.f));
+	SpringArm->AddRelativeRotation(FRotator(-45.f, 25.f, 0.f));
 	SpringArm->bInheritYaw = false;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
