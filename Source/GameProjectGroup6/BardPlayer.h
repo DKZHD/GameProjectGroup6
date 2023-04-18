@@ -25,9 +25,24 @@ public:
 
 	//Components
 	UPROPERTY(EditAnywhere)
-		class USpringArmComponent* SpringArm;
+	class USpringArmComponent* SpringArm;
 	UPROPERTY(EditAnywhere)
-		class UCameraComponent* Camera;
+	class UCameraComponent* Camera;
+	UPROPERTY(EditAnywhere)
+		USceneComponent* WeaponPosition;
+	//Weapons
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AWeaponBase> Flute;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AWeaponBase> Drum;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AWeaponBase> Harp;
+
+	//Systems
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class UNiagaraSystem* FluteSlash;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class UNiagaraSystem* DrumAOE;
 
 	//Input
 	UPROPERTY(EditAnywhere)
@@ -36,10 +51,29 @@ public:
 		class UInputAction* Move;
 	UPROPERTY(EditAnywhere)
 		UInputAction* CombatAction;
+	UPROPERTY(EditAnywhere)
+		UInputAction* SwapWeapon;
 
 	//Functions
 	UFUNCTION()
 	void Movement(const struct FInputActionValue& Value);
+	UFUNCTION()
+	void CombatFunction();
+	UFUNCTION()
+	void Weaponswap();
+
+	//Variables
+	int WeaponNumber=1;
+	FVector Position;
+	FRotator Direction;
+
+	//AnimMontage
+	UPROPERTY(EditAnywhere, Category = "Custom Animations")
+		UAnimMontage* DrumAttack;
+	UPROPERTY(EditAnywhere, Category = "Custom Animations")
+		UAnimMontage* FluteAttack;
+	UPROPERTY(EditAnywhere, Category = "Custom Animations")
+		UAnimMontage* HarpAttack;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
