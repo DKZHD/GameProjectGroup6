@@ -66,8 +66,11 @@ public:
 	FVector LineTraceStart;
 	FVector LineTraceEnd;
 	FRotator Direction;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	bool IsDrumming;
 	FHitResult Hit;
 	FCollisionQueryParams TraceHit;
+	float LerpAlpha;
 
 	AActor* SpawnedFlute=nullptr;
 

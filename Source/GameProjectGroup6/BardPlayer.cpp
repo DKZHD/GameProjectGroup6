@@ -25,6 +25,7 @@ ABardPlayer::ABardPlayer()
 	SpringArm->TargetArmLength = 800.f;
 	SpringArm->AddRelativeRotation(FRotator(-45.f, 25.f, 0.f));
 	SpringArm->bInheritYaw = false;
+	SpringArm->bDoCollisionTest = false;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
@@ -57,6 +58,9 @@ void ABardPlayer::BeginPlay()
 void ABardPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if(IsDrumming)
+	{
+	}
 }
 
 // Called to bind functionality to input
@@ -87,7 +91,7 @@ void ABardPlayer::CombatFunction()
 	{
 		if (FluteSlash)
 		{
-			UNiagaraComponent* Slash = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), FluteSlash, GetActorLocation(),GetCharacterMovement()->GetLastUpdateRotation()-FRotator(0,90,0));
+			UNiagaraComponent* Slash = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), FluteSlash, GetActorLocation(),GetCharacterMovement()->GetLastUpdateRotation()-FRotator(0,140,0));
 			//Slash->
 			if(!SpawnedFlute)
 			SpawnedFlute=GetWorld()->SpawnActor<AActor>(Flute, Position, FRotator(90,0,0));
@@ -99,7 +103,7 @@ void ABardPlayer::CombatFunction()
 	}
 	if (WeaponNumber == 2)
 	{
-
+		IsDrumming = true;
 		//PlayAnimMontage(DrumAttack);
 		if (SpawnedFlute)
 		{
