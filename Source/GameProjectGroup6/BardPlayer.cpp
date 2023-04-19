@@ -11,6 +11,7 @@
 #include "WeaponBase.h"
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 ABardPlayer::ABardPlayer()
@@ -29,8 +30,6 @@ ABardPlayer::ABardPlayer()
 	Camera->SetupAttachment(SpringArm);
 	bUseControllerRotationYaw = false;
 
-	WeaponPosition = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponPosition"));
-	WeaponPosition->SetupAttachment(GetRootComponent());
 	//Possession
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
@@ -58,7 +57,6 @@ void ABardPlayer::BeginPlay()
 void ABardPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	Position = WeaponPosition->GetComponentLocation();
 }
 
 // Called to bind functionality to input
@@ -91,18 +89,38 @@ void ABardPlayer::CombatFunction()
 		{
 			UNiagaraComponent* Slash = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), FluteSlash, GetActorLocation(),GetCharacterMovement()->GetLastUpdateRotation()-FRotator(0,90,0));
 			//Slash->
+			if(!SpawnedFlute)
+			SpawnedFlute=GetWorld()->SpawnActor<AActor>(Flute, Position, FRotator(90,0,0));
+			SpawnedFlute->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("FluteSocket"));
 		}
-	/*	AActor* SpawnedFlute=GetWorld()->SpawnActor<AActor>(Flute, Position, FRotator::ZeroRotator);
-		SpawnedFlute->AttachToComponent(WeaponPosition, FAttachmentTransformRules::SnapToTargetIncludingScale);*/
-		//PlayAnimMontage(FluteAttack);
+	
+		PlayAnimMontage(FluteAttack);
 		GEngine->AddOnScreenDebugMessage(0, 1.f, FColor::Emerald, "Flute");
 	}
 	if (WeaponNumber == 2)
 	{
+
 		//PlayAnimMontage(DrumAttack);
-		if (DrumAOE)
-			UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), DrumAOE, GetActorLocation());
+		if (SpawnedFlute)
+		{
+			SpawnedFlute->Destroy();
+			SpawnedFlute = nullptr;
+		}
+			
+		LineTraceStart = GetActorLocation() + GetActorForwardVector() * FVector(100, 0, 0);
+		LineTraceEnd = LineTraceStart + FVector(0, 0, -300);
+
+		bool HitSomething=GetWorld()->LineTraceSingleByChannel(Hit, LineTraceStart, LineTraceEnd, ECollisionChannel::ECC_Visibility);
+		DrawDebugLine(GetWorld(), LineTraceStart, LineTraceEnd, FColor::Red,false, 2.f);
+		
+		if(HitSomething)
+		{
+			AActor* SpawnedDrum = GetWorld()->SpawnActor<AActor>(Drum, FVector(Hit.Location), GetCharacterMovement()->GetLastUpdateRotation());
 		GEngine->AddOnScreenDebugMessage(0, 1.f, FColor::Red, "Drum");
+		}
+
+		if (DrumAOE)
+			UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), DrumAOE, Hit.Location);
 	}
 	if (WeaponNumber==3)
 	{

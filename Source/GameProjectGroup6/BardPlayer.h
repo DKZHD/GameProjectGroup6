@@ -28,8 +28,6 @@ public:
 	class USpringArmComponent* SpringArm;
 	UPROPERTY(EditAnywhere)
 	class UCameraComponent* Camera;
-	UPROPERTY(EditAnywhere)
-		USceneComponent* WeaponPosition;
 	//Weapons
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AWeaponBase> Flute;
@@ -65,7 +63,13 @@ public:
 	//Variables
 	int WeaponNumber=1;
 	FVector Position;
+	FVector LineTraceStart;
+	FVector LineTraceEnd;
 	FRotator Direction;
+	FHitResult Hit;
+	FCollisionQueryParams TraceHit;
+
+	AActor* SpawnedFlute=nullptr;
 
 	//AnimMontage
 	UPROPERTY(EditAnywhere, Category = "Custom Animations")
