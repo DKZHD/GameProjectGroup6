@@ -35,6 +35,8 @@ public:
 	TSubclassOf<AWeaponBase> Drum;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AWeaponBase> Harp;
+	UPROPERTY(EditAnywhere)
+		USceneComponent* DrumSpawn;
 
 	//Systems
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

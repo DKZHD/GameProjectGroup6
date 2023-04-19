@@ -31,6 +31,9 @@ ABardPlayer::ABardPlayer()
 	Camera->SetupAttachment(SpringArm);
 	bUseControllerRotationYaw = false;
 
+	DrumSpawn = CreateDefaultSubobject<USceneComponent>(TEXT("DrumSpawn"));
+	DrumSpawn->SetupAttachment(GetRootComponent());
+
 	//Possession
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
@@ -111,7 +114,8 @@ void ABardPlayer::CombatFunction()
 			SpawnedFlute = nullptr;
 		}
 			
-		LineTraceStart = GetActorLocation() + GetActorForwardVector() * FVector(100, 0, 0);
+		/*LineTraceStart = GetActorLocation() + GetActorForwardVector() * FVector(100, 0, 0);*/
+		LineTraceStart = DrumSpawn->GetComponentLocation();
 		LineTraceEnd = LineTraceStart + FVector(0, 0, -300);
 
 		bool HitSomething=GetWorld()->LineTraceSingleByChannel(Hit, LineTraceStart, LineTraceEnd, ECollisionChannel::ECC_Visibility);
@@ -124,7 +128,7 @@ void ABardPlayer::CombatFunction()
 		}
 
 		if (DrumAOE)
-			UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), DrumAOE, Hit.Location);
+			UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), DrumAOE, Hit.Location+FVector(0,0,1));
 	}
 	if (WeaponNumber==3)
 	{
