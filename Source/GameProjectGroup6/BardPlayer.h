@@ -61,6 +61,8 @@ public:
 	void CombatFunction();
 	UFUNCTION()
 	void Weaponswap();
+	UFUNCTION()
+	void CombatFunctionRelease();
 
 	//Variables
 	int WeaponNumber=1;
@@ -73,6 +75,7 @@ public:
 	FHitResult Hit;
 	FCollisionQueryParams TraceHit;
 	float LerpAlpha;
+	float TimeSpent;
 
 	AActor* SpawnedFlute=nullptr;
 

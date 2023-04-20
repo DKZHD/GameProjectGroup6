@@ -74,7 +74,8 @@ void ABardPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	if(EPI)
 	{
 		EPI->BindAction(Move, ETriggerEvent::Triggered, this, &ABardPlayer::Movement);
-		EPI->BindAction(CombatAction, ETriggerEvent::Started, this, &ABardPlayer::CombatFunction);
+		EPI->BindAction(CombatAction, ETriggerEvent::Triggered, this, &ABardPlayer::CombatFunction);
+		EPI->BindAction(CombatAction, ETriggerEvent::Completed, this, &ABardPlayer::CombatFunctionRelease);
 		EPI->BindAction(SwapWeapon, ETriggerEvent::Started, this, &ABardPlayer::Weaponswap);
 	}
 }
@@ -132,8 +133,33 @@ void ABardPlayer::CombatFunction()
 	{
 		//PlayAnimMontage(HarpAttack);
 		GEngine->AddOnScreenDebugMessage(0, 1.f, FColor::Blue, "Harp");
+		TimeSpent += GetWorld()->DeltaTimeSeconds;
 	}
 }
+
+void ABardPlayer::CombatFunctionRelease()
+{
+	if(WeaponNumber==3)
+	{
+		if(TimeSpent < 1 && TimeSpent > 0)
+		{
+			GEngine->AddOnScreenDebugMessage(0,1,FColor::Red, TEXT("1 Damage"));
+			//GetWorld()->SpawnActor<AArrow>(Arrow, GetActorLocation()+FVector(100,0,0), FRotator(GetActorRotation().Yaw));
+		}
+		if(TimeSpent < 2 && TimeSpent > 1)
+		{
+			GEngine->AddOnScreenDebugMessage(0,1,FColor::Red, TEXT("2 Damage"));
+			//GetWorld()->SpawnActor<AArrow>(Arrow, GetActorLocation()+FVector(100,0,0), FRotator(GetActorRotation().Yaw));
+		}
+		if(TimeSpent > 2)
+		{
+			GEngine->AddOnScreenDebugMessage(0,1,FColor::Red, TEXT("3 Damage"));
+			//GetWorld()->SpawnActor<AArrow>(Arrow, GetActorLocation()+FVector(100,0,0), FRotator(GetActorRotation().Yaw));
+		}
+		TimeSpent = 0;
+	}
+}
+
 
 void ABardPlayer::Weaponswap()
 {
