@@ -9,7 +9,3 @@ UPlayerBBKey::UPlayerBBKey()
 
 }
 
-void UPlayerBBKey::BeginPlay()
-{
-	Player= Cast<ABardPlayer>(GetWorld()->GetFirstPlayerController()->GetCharacter());
-}

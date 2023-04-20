@@ -15,12 +15,6 @@ class GAMEPROJECTGROUP6_API UPlayerBBKey : public UBlackboardKeyType_Object
 	GENERATED_BODY()
 
 	UPlayerBBKey();
-
-protected:
-	virtual void BeginPlay() override;
-public:
-
-	UPROPERTY(EditAnywhere, Category = "PlayerBBKey")
-		class ABardPlayer* Player;
+	
 	
 };
