@@ -61,9 +61,6 @@ void ABardPlayer::BeginPlay()
 void ABardPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if(IsDrumming)
-	{
-	}
 }
 
 // Called to bind functionality to input
