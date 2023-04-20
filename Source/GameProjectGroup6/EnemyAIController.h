@@ -20,6 +20,11 @@ public:
 	
 	UPROPERTY(EditAnywhere)
 		UBehaviorTree* BT;
+
+	UPROPERTY(EditAnywhere)
+		class UBlackboardComponent* BB;
+	UPROPERTY(EditAnywhere)
+	class UBlackboardData* BBD;
 	
 protected:
 	virtual void BeginPlay() override;

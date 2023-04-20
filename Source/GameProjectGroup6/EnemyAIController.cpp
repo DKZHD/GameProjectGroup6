@@ -2,18 +2,22 @@
 
 
 #include "EnemyAIController.h"
+#include "BardPlayer.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 
 AEnemyAIController::AEnemyAIController()
 {
-	
-}
 
+}
 void AEnemyAIController::BeginPlay()
 {
 	Super::BeginPlay();
+	ABardPlayer* Bard = Cast<ABardPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	RunBehaviorTree(BT);
+	UseBlackboard(BBD, BB);
+	BB->SetValueAsObject(FName("Player"), Bard);
 }
 
 void AEnemyAIController::Tick(float DeltaSeconds)
