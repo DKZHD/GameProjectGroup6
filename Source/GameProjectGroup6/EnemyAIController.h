@@ -15,7 +15,7 @@ class GAMEPROJECTGROUP6_API AEnemyAIController : public AAIController
 	GENERATED_BODY()
 public:
 	AEnemyAIController();
-	virual void Tick(float DeltaSeconds) override;
+	virtual void Tick(float DeltaSeconds) override;
 	
 	UPROPERTY(EditAnywhere)
 		UBehaviorTree* BT;
