@@ -6,6 +6,7 @@
 #include "AIController.h"
 #include "EnemyAIController.generated.h"
 
+
 /**
  * 
  */
@@ -16,12 +17,10 @@ class GAMEPROJECTGROUP6_API AEnemyAIController : public AAIController
 public:
 	AEnemyAIController();
 	virtual void Tick(float DeltaSeconds) override;
-
-	UPROPERTY(EditAnywhere)
-	UBlackboardComponent* BlackboardComp = GetBlackboardComponent();
-
+	
 	UPROPERTY(EditAnywhere)
 		UBehaviorTree* BT;
+	
 protected:
 	virtual void BeginPlay() override;
 };
