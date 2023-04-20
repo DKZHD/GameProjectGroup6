@@ -13,6 +13,8 @@ class AGameProjectGroup6GameMode : public AGameModeBase
 
 public:
 	AGameProjectGroup6GameMode();
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<class ACustomHUD> CustomHUD_BP;
 };
 
 
