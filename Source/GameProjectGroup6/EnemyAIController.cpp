@@ -2,6 +2,7 @@
 
 
 #include "EnemyAIController.h"
+#include "BardPlayer.h"
 
 AEnemyAIController::AEnemyAIController()
 {
