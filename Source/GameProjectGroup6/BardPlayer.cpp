@@ -46,6 +46,7 @@ ABardPlayer::ABardPlayer()
 void ABardPlayer::BeginPlay()
 {
 	Super::BeginPlay();
+	//Enhanced Movement Input Context Init
 	APlayerController* PC = Cast<APlayerController>(GetController());
 	if (PC)
 	{
@@ -77,7 +78,7 @@ void ABardPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EPI->BindAction(SwapWeapon, ETriggerEvent::Started, this, &ABardPlayer::Weaponswap);
 	}
 }
-
+//Movement
 void ABardPlayer::Movement(const FInputActionValue& Value)
 {
 	FVector2D MovementValue = Value.Get<FVector2D>();
