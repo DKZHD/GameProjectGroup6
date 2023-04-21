@@ -12,6 +12,7 @@
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "DrawDebugHelpers.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ABardPlayer::ABardPlayer()
@@ -74,7 +75,8 @@ void ABardPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	if(EPI)
 	{
 		EPI->BindAction(Move, ETriggerEvent::Triggered, this, &ABardPlayer::Movement);
-		EPI->BindAction(CombatAction, ETriggerEvent::Triggered, this, &ABardPlayer::CombatFunction);
+		EPI->BindAction(CombatAction, ETriggerEvent::Started, this, &ABardPlayer::CombatFunction);
+		EPI->BindAction(CombatAction, ETriggerEvent::Triggered, this, &ABardPlayer::CombatFunctionChargeClock);
 		EPI->BindAction(CombatAction, ETriggerEvent::Completed, this, &ABardPlayer::CombatFunctionRelease);
 		EPI->BindAction(SwapWeapon, ETriggerEvent::Started, this, &ABardPlayer::Weaponswap);
 	}
@@ -89,7 +91,9 @@ void ABardPlayer::Movement(const FInputActionValue& Value)
 
 void ABardPlayer::CombatFunction()
 {
-	if (WeaponNumber == 1)
+	if(!IsDrumming)
+	{
+		if (WeaponNumber == 1)
 	{
 		if (FluteSlash)
 		{
@@ -106,6 +110,8 @@ void ABardPlayer::CombatFunction()
 	if (WeaponNumber == 2)
 	{
 		IsDrumming = true;
+		GetCharacterMovement()->MovementMode = EMovementMode::MOVE_None;
+		GetWorldTimerManager().SetTimer(Handle, this, &ABardPlayer::ActivateMovement,1.f,false,2.f);
 		//PlayAnimMontage(DrumAttack);
 		if (SpawnedFlute)
 		{
@@ -133,8 +139,14 @@ void ABardPlayer::CombatFunction()
 	{
 		//PlayAnimMontage(HarpAttack);
 		GEngine->AddOnScreenDebugMessage(0, 1.f, FColor::Blue, "Harp");
-		TimeSpent += GetWorld()->DeltaTimeSeconds;
 	}
+	}
+	
+}
+
+void ABardPlayer::CombatFunctionChargeClock()
+{
+	TimeSpent += GetWorld()->DeltaTimeSeconds;
 }
 
 void ABardPlayer::CombatFunctionRelease()
@@ -160,6 +172,16 @@ void ABardPlayer::CombatFunctionRelease()
 	}
 }
 
+void ABardPlayer::DoDamage(float DamageAmount)
+{
+}
+
+void ABardPlayer::ActivateMovement()
+{
+	GetCharacterMovement()->MovementMode = EMovementMode::MOVE_Walking;
+	IsDrumming = false;
+	GetWorldTimerManager().ClearTimer(Handle);
+}
 
 void ABardPlayer::Weaponswap()
 {

@@ -36,7 +36,10 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AWeaponBase> Harp;
 	UPROPERTY(EditAnywhere)
-		USceneComponent* DrumSpawn;
+	USceneComponent* DrumSpawn;
+
+	//Handles
+	FTimerHandle Handle;
 
 	//Systems
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -60,9 +63,15 @@ public:
 	UFUNCTION()
 	void CombatFunction();
 	UFUNCTION()
+	void CombatFunctionChargeClock();
+	UFUNCTION()
 	void Weaponswap();
 	UFUNCTION()
 	void CombatFunctionRelease();
+	UFUNCTION()
+	void DoDamage(float DamageAmount);
+	UFUNCTION()
+	void ActivateMovement();
 
 	//Variables
 	int WeaponNumber=1;
@@ -76,10 +85,10 @@ public:
 	FCollisionQueryParams TraceHit;
 	float LerpAlpha;
 	float TimeSpent;
-
+	//Spawned Components
 	AActor* SpawnedFlute=nullptr;
 
-	//AnimMontage
+	//AnimMontages
 	UPROPERTY(EditAnywhere, Category = "Custom Animations")
 		UAnimMontage* DrumAttack;
 	UPROPERTY(EditAnywhere, Category = "Custom Animations")
