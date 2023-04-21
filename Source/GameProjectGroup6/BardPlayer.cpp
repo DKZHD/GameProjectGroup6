@@ -13,6 +13,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
+#include "DrumChild.h"
 
 // Sets default values
 ABardPlayer::ABardPlayer()
@@ -48,6 +49,7 @@ void ABardPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	//Enhanced Movement Input Context Init
+	IgnoredActors.Add(this);
 	APlayerController* PC = Cast<APlayerController>(GetController());
 	if (PC)
 	{
@@ -128,10 +130,12 @@ void ABardPlayer::CombatFunction()
 		
 		if(HitSomething)
 		{
-			AActor* SpawnedDrum = GetWorld()->SpawnActor<AActor>(Drum, FVector(Hit.Location), GetCharacterMovement()->GetLastUpdateRotation());
-		GEngine->AddOnScreenDebugMessage(0, 1.f, FColor::Red, "Drum");
+			SpawnedDrum = GetWorld()->SpawnActor<AActor>(Drum, FVector(Hit.Location), GetCharacterMovement()->GetLastUpdateRotation());
+			if (SpawnedDrum)
+				UGameplayStatics::ApplyRadialDamage(GetWorld(), 1, DrumSpawn->GetComponentLocation(), 1500.f, Damage, IgnoredActors);
+			
 		}
-
+		else { GEngine->AddOnScreenDebugMessage(0, 2.f, FColor::Red, "Failed"); }
 		if (DrumAOE)
 			UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), DrumAOE, Hit.Location+FVector(0,0,1));
 	}

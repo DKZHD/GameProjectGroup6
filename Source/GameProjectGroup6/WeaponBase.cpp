@@ -2,7 +2,8 @@
 
 
 #include "WeaponBase.h"
-
+#include "BardPlayer.h"
+#include "Kismet/GameplayStatics.h"
 // Sets default values
 AWeaponBase::AWeaponBase()
 {
@@ -16,7 +17,7 @@ AWeaponBase::AWeaponBase()
 void AWeaponBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	Bard = Cast<ABardPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 }
 
 // Called every frame

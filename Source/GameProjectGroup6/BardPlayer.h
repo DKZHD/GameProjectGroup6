@@ -32,7 +32,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AWeaponBase> Flute;
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<AWeaponBase> Drum;
+	TSubclassOf<class AWeaponBase> Drum;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AWeaponBase> Harp;
 	UPROPERTY(EditAnywhere)
@@ -85,8 +85,14 @@ public:
 	FCollisionQueryParams TraceHit;
 	float LerpAlpha;
 	float TimeSpent;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UDamageType> Damage;
+	//Ignored
+	TArray<AActor*> IgnoredActors;
+
 	//Spawned Components
 	AActor* SpawnedFlute=nullptr;
+	AActor* SpawnedDrum = nullptr;
 
 	//AnimMontages
 	UPROPERTY(EditAnywhere, Category = "Custom Animations")

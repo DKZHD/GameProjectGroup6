@@ -18,7 +18,7 @@ public:
 	//Components
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* Mesh;
-
+	class ABardPlayer* Bard;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

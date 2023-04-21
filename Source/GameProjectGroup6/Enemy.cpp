@@ -12,6 +12,7 @@ AEnemy::AEnemy()
 	PrimaryActorTick.bCanEverTick = true;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0, 500, 0);
+	GetCharacterMovement()->MaxWalkSpeed = 400.f;
 }
 
 // Called when the game starts or when spawned
