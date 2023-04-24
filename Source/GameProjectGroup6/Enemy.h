@@ -21,6 +21,11 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Enemy")
 		bool IsStunned;
 
+	UFUNCTION()
+		void OnRadialDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, FVector Origin, FHitResult HitInfo, class AController* InstigatedBy, AActor* DamageCauser);
+
+
+	FTimerHandle Handle;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

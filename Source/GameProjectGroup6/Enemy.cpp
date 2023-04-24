@@ -13,13 +13,14 @@ AEnemy::AEnemy()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0, 500, 0);
 	GetCharacterMovement()->MaxWalkSpeed = 400.f;
+	this->OnTakeRadialDamage.AddDynamic(this, &AEnemy::OnRadialDamage);
 }
 
 // Called when the game starts or when spawned
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-
+	this->OnTakeRadialDamage.AddDynamic(this, &AEnemy::OnRadialDamage);
 	AutoPossessAI= EAutoPossessAI::PlacedInWorldOrSpawned;
 	
 }
@@ -36,6 +37,15 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AEnemy::OnRadialDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, FVector Origin, FHitResult HitInfo, AController* InstigatedBy, AActor* DamageCauser)
+{
+	GEngine->AddOnScreenDebugMessage(0, 2.f, FColor::Red, "Yay!");
+	this->LaunchCharacter(FVector(0, 0, 750.f), true, false);
+	IsStunned = true;
+	CanAttack = false;
+	//GetWorldTimerManager().SetTimer(Handle,)
 }
 
 
