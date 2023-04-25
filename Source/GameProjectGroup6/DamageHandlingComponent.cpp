@@ -32,7 +32,14 @@ void UDamageHandlingComponent::TakeDamage(AActor* DamagedActor, float Damage, co
 {
 	Health -= Damage;
 	if (Health < 1)
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Dead");
+	{
+		IsDead = true;
+	}
+}
+
+float UDamageHandlingComponent::GetHealthPercent()
+{
+	return Health / DefaultHealth;
 }
 
 

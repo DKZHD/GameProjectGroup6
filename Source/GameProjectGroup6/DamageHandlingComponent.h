@@ -21,12 +21,16 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite, Category = "Health")
 	float Health;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float DefaultHealth;
+	UPROPERTY(BlueprintReadWrite)
+	bool IsDead;
 
 	UFUNCTION()
-		void TakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
-		
+	void TakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+
+	UFUNCTION()
+	float GetHealthPercent();
 };
