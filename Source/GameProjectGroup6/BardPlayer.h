@@ -37,6 +37,8 @@ public:
 	TSubclassOf<AWeaponBase> Harp;
 	UPROPERTY(EditAnywhere)
 	USceneComponent* DrumSpawn;
+	UPROPERTY(EditAnywhere)
+	class UDamageHandlingComponent* DamageHandlingComponent;
 
 	//Handles
 	FTimerHandle Handle;
@@ -69,9 +71,12 @@ public:
 	UFUNCTION()
 	void CombatFunctionRelease();
 	UFUNCTION()
-	void DoDamage(float DamageAmount);
+	void DoDamage(AActor* DamagedActor, float BaseDamage, AController* EventInstigator, AActor* DamageCauser, TSubclassOf<class UDamageType> DamageTypeClass);
 	UFUNCTION()
 	void ActivateMovement();
+	UFUNCTION()
+	void PlayHitAnim(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+
 
 	//Variables
 	int WeaponNumber=1;
@@ -79,14 +84,20 @@ public:
 	FVector LineTraceStart;
 	FVector LineTraceEnd;
 	FRotator Direction;
+
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	bool IsDrumming;
+
 	FHitResult Hit;
 	FCollisionQueryParams TraceHit;
 	float LerpAlpha;
 	float TimeSpent;
+
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UDamageType> Damage;
+	TSubclassOf<UDamageType> BaseDamageType;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		float Health = 5;
+
 	//Ignored
 	TArray<AActor*> IgnoredActors;
 
@@ -101,6 +112,8 @@ public:
 		UAnimMontage* FluteAttack;
 	UPROPERTY(EditAnywhere, Category = "Custom Animations")
 		UAnimMontage* HarpAttack;
+	UPROPERTY(EditAnywhere, Category = "Custom Animations")
+		UAnimMontage* HitAnim;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

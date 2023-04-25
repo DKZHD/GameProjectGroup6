@@ -3,6 +3,8 @@
 
 #include "Enemy.h"
 
+#include "DamageHandlingComponent.h"
+#include "TimerManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 	// Sets default values
@@ -10,9 +12,14 @@ AEnemy::AEnemy()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	DamageHandling = CreateDefaultSubobject<UDamageHandlingComponent>("DamageHandling");
+	DamageHandling->DefaultHealth = 3;
+
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0, 500, 0);
 	GetCharacterMovement()->MaxWalkSpeed = 400.f;
+	GetCharacterMovement()->GravityScale = 3.f;
 	this->OnTakeRadialDamage.AddDynamic(this, &AEnemy::OnRadialDamage);
 }
 
@@ -45,7 +52,20 @@ void AEnemy::OnRadialDamage(AActor* DamagedActor, float Damage, const UDamageTyp
 	this->LaunchCharacter(FVector(0, 0, 750.f), true, false);
 	IsStunned = true;
 	CanAttack = false;
-	//GetWorldTimerManager().SetTimer(Handle,)
+	GetWorldTimerManager().SetTimer(Handle, this, &AEnemy::ResetStun, 1, false, 4.f);
+	GetWorldTimerManager().SetTimer(GravityHandle, this, &AEnemy::ChangeMovementMode, 1, false, .6);
+}
+void AEnemy::ChangeMovementMode()
+{
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+	GetWorldTimerManager().ClearTimer(GravityHandle);
+}
+
+void AEnemy::ResetStun()
+{
+	IsStunned = false;
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+	GetWorldTimerManager().ClearTimer(Handle);
 }
 
 

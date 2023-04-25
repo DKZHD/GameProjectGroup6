@@ -14,6 +14,8 @@ class GAMEPROJECTGROUP6_API AEnemy : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AEnemy();
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		class UDamageHandlingComponent* DamageHandling;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Enemy")
 		bool CanAttack;
@@ -24,8 +26,14 @@ public:
 	UFUNCTION()
 		void OnRadialDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, FVector Origin, FHitResult HitInfo, class AController* InstigatedBy, AActor* DamageCauser);
 
+	UFUNCTION()
+		void ResetStun();
+
+	UFUNCTION()
+		void ChangeMovementMode();
 
 	FTimerHandle Handle;
+	FTimerHandle GravityHandle;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

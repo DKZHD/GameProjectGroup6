@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BardPlayer.h"
+
+#include "DamageHandlingComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedPlayerInput.h"
@@ -13,7 +15,6 @@
 #include "NiagaraFunctionLibrary.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
-#include "DrumChild.h"
 
 // Sets default values
 ABardPlayer::ABardPlayer()
@@ -36,6 +37,8 @@ ABardPlayer::ABardPlayer()
 	DrumSpawn = CreateDefaultSubobject<USceneComponent>(TEXT("DrumSpawn"));
 	DrumSpawn->SetupAttachment(GetRootComponent());
 
+	DamageHandlingComponent = CreateDefaultSubobject<UDamageHandlingComponent>(TEXT("DamageHandlingComp"));
+
 	//Possession
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
@@ -48,6 +51,9 @@ ABardPlayer::ABardPlayer()
 void ABardPlayer::BeginPlay()
 {
 	Super::BeginPlay();
+	//When Hit play animation
+	this->OnTakeAnyDamage.AddDynamic(this, &ABardPlayer::PlayHitAnim);
+
 	//Enhanced Movement Input Context Init
 	IgnoredActors.Add(this);
 	APlayerController* PC = Cast<APlayerController>(GetController());
@@ -72,7 +78,8 @@ void ABardPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	UEnhancedInputComponent* EPI = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-
+	//On Damage/Play Hit Animation
+	
 	//Input Actions
 	if(EPI)
 	{
@@ -100,7 +107,7 @@ void ABardPlayer::CombatFunction()
 		if (FluteSlash)
 		{
 			UNiagaraComponent* Slash = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), FluteSlash, GetActorLocation(),GetCharacterMovement()->GetLastUpdateRotation()-FRotator(0,140,0));
-			//Slash->
+			PlayAnimMontage(FluteAttack);
 			if(!SpawnedFlute)
 			SpawnedFlute=GetWorld()->SpawnActor<AActor>(Flute, Position, FRotator(90,0,0));
 			SpawnedFlute->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("FluteSocket"));
@@ -130,10 +137,10 @@ void ABardPlayer::CombatFunction()
 		
 		if(HitSomething)
 		{
+			if(!SpawnedDrum)
 			SpawnedDrum = GetWorld()->SpawnActor<AActor>(Drum, FVector(Hit.Location), GetCharacterMovement()->GetLastUpdateRotation());
 			if (SpawnedDrum)
-				UGameplayStatics::ApplyRadialDamage(GetWorld(), 1, DrumSpawn->GetComponentLocation(), 1500.f, Damage, IgnoredActors);
-			
+				UGameplayStatics::ApplyRadialDamage(GetWorld(), 1.f, DrumSpawn->GetComponentLocation(), 1500.f, BaseDamageType, IgnoredActors);
 		}
 		else { GEngine->AddOnScreenDebugMessage(0, 2.f, FColor::Red, "Failed"); }
 		if (DrumAOE)
@@ -176,7 +183,7 @@ void ABardPlayer::CombatFunctionRelease()
 	}
 }
 
-void ABardPlayer::DoDamage(float DamageAmount)
+void ABardPlayer::DoDamage(AActor* DamagedActor, float BaseDamage, AController* EventInstigator, AActor* DamageCauser, TSubclassOf<class UDamageType> DamageTypeClass)
 {
 }
 
@@ -184,12 +191,20 @@ void ABardPlayer::ActivateMovement()
 {
 	GetCharacterMovement()->MovementMode = EMovementMode::MOVE_Walking;
 	IsDrumming = false;
+	SpawnedDrum = nullptr;
 	GetWorldTimerManager().ClearTimer(Handle);
+}
+
+void ABardPlayer::PlayHitAnim(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+{
+	PlayAnimMontage(HitAnim);
 }
 
 void ABardPlayer::Weaponswap()
 {
+	if(!IsDrumming)
 	WeaponNumber++;
 	if (WeaponNumber > 3)
 		WeaponNumber = 1;
 }
+

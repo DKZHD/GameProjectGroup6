@@ -14,8 +14,14 @@ class GAMEPROJECTGROUP6_API UUI : public UUserWidget
 {
 	GENERATED_BODY()
 
-		UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
 		class UProgressBar* HP_Bar;
 
+	void NativeConstruct() override;
 
+	UPROPERTY(EditAnywhere)
+		class ABardPlayer* Bard;
+
+	UFUNCTION(BlueprintPure)
+		float GetHealthPercent();
 };
