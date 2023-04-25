@@ -87,7 +87,7 @@ void AEnemy::ResetStun()
 void AEnemy::Die()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Dead");
-	DamageHandling->IsDead = false;
+	this->Destroy();
 }
 
 
