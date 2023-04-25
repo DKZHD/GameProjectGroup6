@@ -28,6 +28,7 @@ public:
 	class USpringArmComponent* SpringArm;
 	UPROPERTY(EditAnywhere)
 	class UCameraComponent* Camera;
+
 	//Weapons
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AWeaponBase> Flute;
@@ -39,6 +40,8 @@ public:
 	USceneComponent* DrumSpawn;
 	UPROPERTY(EditAnywhere)
 	class UDamageHandlingComponent* DamageHandlingComponent;
+	UPROPERTY(EditAnywhere)
+	AWeaponBase* FluteRef;
 
 	//Handles
 	FTimerHandle Handle;

@@ -14,6 +14,7 @@
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "DrawDebugHelpers.h"
+#include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -44,7 +45,7 @@ ABardPlayer::ABardPlayer()
 
 	//Orient To Movement
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->RotationRate = FRotator(0, 500, 0);
+	GetCharacterMovement()->RotationRate = FRotator(0, 100, 0);
 }
  
 // Called when the game starts or when spawned
@@ -109,14 +110,19 @@ void ABardPlayer::CombatFunction()
 			UNiagaraComponent* Slash = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), FluteSlash, GetActorLocation(),GetCharacterMovement()->GetLastUpdateRotation()-FRotator(0,140,0));
 			PlayAnimMontage(FluteAttack);
 			if(!SpawnedFlute)
-			SpawnedFlute=GetWorld()->SpawnActor<AActor>(Flute, Position, FRotator(90,0,0));
+			{
+				SpawnedFlute=GetWorld()->SpawnActor<AActor>(Flute, Position, FRotator(90,0,0));
+				FluteRef=Cast<AWeaponBase>(SpawnedFlute);
+			}
+			
 			SpawnedFlute->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("FluteSocket"));
+			FluteRef->FluteCollision->Activate();
 		}
 	
 		PlayAnimMontage(FluteAttack);
 		GEngine->AddOnScreenDebugMessage(0, 1.f, FColor::Emerald, "Flute");
 	}
-	if (WeaponNumber == 2)
+		if (WeaponNumber == 2)
 	{
 		IsDrumming = true;
 		GetCharacterMovement()->MovementMode = EMovementMode::MOVE_None;

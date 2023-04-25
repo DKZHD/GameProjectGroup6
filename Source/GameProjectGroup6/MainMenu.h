@@ -4,24 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "UI.generated.h"
+#include "MainMenu.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class GAMEPROJECTGROUP6_API UUI : public UUserWidget
+class GAMEPROJECTGROUP6_API UMainMenu : public UUserWidget
 {
 	GENERATED_BODY()
-
+public:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-		class UProgressBar* HP_Bar;
+		class UButton* StartGame;
 
 	virtual void NativeConstruct() override;
 
-	UPROPERTY(EditAnywhere)
-		class ABardPlayer* Bard;
-
-	UFUNCTION(BlueprintPure)
-		float GetHealthPercent();
+	UFUNCTION()
+		void StartGameButtonClicked();
 };

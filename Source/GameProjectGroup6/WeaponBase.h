@@ -19,6 +19,9 @@ public:
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* Mesh;
 	class ABardPlayer* Bard;
+
+	UPROPERTY(EditAnywhere)
+	class UBoxComponent* FluteCollision;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -26,5 +29,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	TSubclassOf<UDamageType> BaseDamage;
+UFUNCTION()
+	void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 };
