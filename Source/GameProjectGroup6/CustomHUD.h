@@ -14,10 +14,17 @@ class GAMEPROJECTGROUP6_API ACustomHUD : public AHUD
 {
 	GENERATED_BODY()
 public:
+	ACustomHUD();
 protected:
 	virtual void BeginPlay() override;
 public:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<UUserWidget> UI_BP;
+	
 	FInputModeGameOnly GameOnly;
+	UFUNCTION()
+	void ClearWidgets();
+
+	FTimerHandle Handle;
+
 };

@@ -16,9 +16,15 @@ class GAMEPROJECTGROUP6_API UMainMenu : public UUserWidget
 public:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 		class UButton* StartGame;
+	UPROPERTY(EditAnywhere,meta=(BindWidget))
+	UButton* ExitGame;
+	UPROPERTY()
+	class ACustomHUD* HUD;
 
 	virtual void NativeConstruct() override;
 
 	UFUNCTION()
 		void StartGameButtonClicked();
+	UFUNCTION()
+		void EndGameClicked();
 };

@@ -45,7 +45,7 @@ ABardPlayer::ABardPlayer()
 
 	//Orient To Movement
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->RotationRate = FRotator(0, 100, 0);
+	GetCharacterMovement()->RotationRate = FRotator(0, 300, 0);
 }
  
 // Called when the game starts or when spawned
@@ -144,7 +144,7 @@ void ABardPlayer::CombatFunction()
 		if(HitSomething)
 		{
 			if(!SpawnedDrum)
-			SpawnedDrum = GetWorld()->SpawnActor<AActor>(Drum, FVector(Hit.Location), GetCharacterMovement()->GetLastUpdateRotation());
+				SpawnedDrum = GetWorld()->SpawnActor<AActor>(Drum, FVector(Hit.Location), GetCharacterMovement()->GetLastUpdateRotation());
 			if (SpawnedDrum)
 				UGameplayStatics::ApplyRadialDamage(GetWorld(), 1.f, DrumSpawn->GetComponentLocation(), 1500.f, BaseDamageType, IgnoredActors);
 		}
