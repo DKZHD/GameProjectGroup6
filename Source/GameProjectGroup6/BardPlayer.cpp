@@ -107,7 +107,8 @@ void ABardPlayer::CombatFunction()
 	{
 		if (FluteSlash)
 		{
-			UNiagaraComponent* Slash = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), FluteSlash, GetActorLocation(),GetCharacterMovement()->GetLastUpdateRotation()-FRotator(0,140,0));
+			//UNiagaraComponent* Slash = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), FluteSlash, GetActorLocation(),GetCharacterMovement()->GetLastUpdateRotation()-FRotator(0,140,0));
+			UNiagaraComponent*Slash2=UNiagaraFunctionLibrary::SpawnSystemAttached(FluteSlash,GetMesh(),"SlashSocket",GetMesh()->GetBoneLocation("SlashSocket"),FRotator::ZeroRotator,EAttachLocation::SnapToTargetIncludingScale,false);
 			PlayAnimMontage(FluteAttack);
 			if(!SpawnedFlute)
 			{
