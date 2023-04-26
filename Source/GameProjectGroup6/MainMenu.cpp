@@ -19,7 +19,7 @@ void UMainMenu::NativeConstruct()
 void UMainMenu::StartGameButtonClicked()
 {
 	UWidgetLayoutLibrary::RemoveAllWidgets(GetWorld());
-	UGameplayStatics::OpenLevel(GetWorld(), "NewMap_lvl_1",false);
+	UGameplayStatics::OpenLevel(GetWorld(), "NewMap_lvl_1",true);
 }
 
 void UMainMenu::EndGameClicked()
