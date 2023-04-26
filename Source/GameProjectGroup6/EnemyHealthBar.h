@@ -13,6 +13,7 @@ class GAMEPROJECTGROUP6_API UEnemyHealthBar : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	//
 	UPROPERTY(meta = (BindWidget))
 		class UProgressBar* HealthBar;
 	

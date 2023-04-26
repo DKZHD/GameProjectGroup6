@@ -15,15 +15,20 @@ public:
 	// Sets default values for this actor's properties
 	AItems();
 
+
+	//Mesh Component
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 		UStaticMeshComponent* StaticMesh;
 
+	//Collusion Component
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 		class USphereComponent* Collider;
 
+	//Damage Handling Component
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 		class UDamageHandlingComponent* DamageHandling;
 
+	//Bard Player
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 		class ABardPlayer* Bard;
 
@@ -37,10 +42,13 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	//On overlap function
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	                    UPrimitiveComponent* OtherComponent,
 	                    int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 private:
+
+	//How often enemies drop healing item
 	int Droprate;
 };

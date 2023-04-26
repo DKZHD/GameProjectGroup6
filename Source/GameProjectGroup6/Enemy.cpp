@@ -36,6 +36,7 @@ AEnemy::AEnemy()
 	HealthBarWidget = CreateDefaultSubobject<UHealthBardComponent>(TEXT("HealthBar"));
 	HealthBarWidget->SetupAttachment(GetRootComponent());
 }
+	
 
 // Called when the game starts or when spawned
 void AEnemy::BeginPlay()
