@@ -52,8 +52,10 @@ ABardPlayer::ABardPlayer()
 void ABardPlayer::BeginPlay()
 {
 	Super::BeginPlay();
+	AnimInstance=GetMesh()->GetAnimInstance();
 	//When Hit play animation
 	this->OnTakeAnyDamage.AddDynamic(this, &ABardPlayer::PlayHitAnim);
+	AnimInstance->OnMontageEnded.AddDynamic(this,&ABardPlayer::WhenCompleted);
 
 	//Enhanced Movement Input Context Init
 	IgnoredActors.Add(this);
@@ -103,28 +105,30 @@ void ABardPlayer::CombatFunction()
 {
 	if(!IsDrumming)
 	{
-		if (WeaponNumber == 1)
-	{
-		if (FluteSlash)
+		if(!IsFluting)
 		{
+			if (WeaponNumber == 1)
+			{
+			if (FluteSlash)
+			{
 			//UNiagaraComponent* Slash = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), FluteSlash, GetActorLocation(),GetCharacterMovement()->GetLastUpdateRotation()-FRotator(0,140,0));
 			UNiagaraComponent*Slash2=UNiagaraFunctionLibrary::SpawnSystemAttached(FluteSlash,GetMesh(),"SlashSocket",GetMesh()->GetBoneLocation("SlashSocket"),FRotator::ZeroRotator,EAttachLocation::SnapToTargetIncludingScale,false);
 			PlayAnimMontage(FluteAttack);
+			
 			if(!SpawnedFlute)
 			{
 				SpawnedFlute=GetWorld()->SpawnActor<AActor>(Flute, Position, FRotator(90,0,0));
 				FluteRef=Cast<AWeaponBase>(SpawnedFlute);
 			}
-			
+			IsFluting=true;
 			SpawnedFlute->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("FluteSocket"));
 			FluteRef->FluteCollision->Activate();
+			}
+			
+		
 		}
-	
-		PlayAnimMontage(FluteAttack);
-		GEngine->AddOnScreenDebugMessage(0, 1.f, FColor::Emerald, "Flute");
-	}
 		if (WeaponNumber == 2)
-	{
+		{
 		IsDrumming = true;
 		GetCharacterMovement()->MovementMode = EMovementMode::MOVE_None;
 		GetWorldTimerManager().SetTimer(Handle, this, &ABardPlayer::ActivateMovement,1.f,false,2.f);
@@ -153,11 +157,13 @@ void ABardPlayer::CombatFunction()
 		if (DrumAOE)
 			UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), DrumAOE, Hit.Location+FVector(0,0,1));
 	}
-	if (WeaponNumber==3)
-	{
+		if (WeaponNumber==3)
+		{
 		//PlayAnimMontage(HarpAttack);
 		GEngine->AddOnScreenDebugMessage(0, 1.f, FColor::Blue, "Harp");
-	}
+		}
+		}
+		
 	}
 	
 }
@@ -207,11 +213,26 @@ void ABardPlayer::PlayHitAnim(AActor* DamagedActor, float Damage, const class UD
 	PlayAnimMontage(HitAnim);
 }
 
+void ABardPlayer::WhenCompleted(UAnimMontage* Montage, bool bInterrupted)
+{
+	if(!bInterrupted)
+	{
+		if(Montage==FluteAttack)
+		{
+			IsFluting=false;
+			FluteRef->FluteCollision->Deactivate();
+		}
+	}
+}
+
 void ABardPlayer::Weaponswap()
 {
 	if(!IsDrumming)
+{
+	if(!IsFluting)
 	WeaponNumber++;
+}
 	if (WeaponNumber > 3)
-		WeaponNumber = 1;
+    		WeaponNumber = 1;
 }
 
