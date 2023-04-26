@@ -37,7 +37,7 @@ void ACustomHUD::BeginPlay()
 		{
 			UGameplayStatics::GetPlayerController(GetWorld(),0)->SetInputMode(GameOnly);
 			UGameplayStatics::GetPlayerController(GetWorld(),0)->SetShowMouseCursor(false);
-			UGameplayStatics::GetPlayerCameraManager(this,0)->StartCameraFade(1,0,5,FLinearColor::Black);
+			UGameplayStatics::GetPlayerCameraManager(this,0)->StartCameraFade(1,0,3,FLinearColor::Black);
 			UIWidget->AddToViewport(0);
 		}
 	}
