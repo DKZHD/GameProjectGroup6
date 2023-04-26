@@ -35,24 +35,30 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	
+
+	// Changing movement mode to walking
     UFUNCTION()
         void ChangeMovementMode();
 
+	// When the enemy is hit by radial damage
 	UFUNCTION()
 		void OnRadialDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, FVector Origin, FHitResult HitInfo, class AController* InstigatedBy, AActor* DamageCauser);
 
+	// Function to reset after getting stunned
 	UFUNCTION()
 		void ResetStun();
 
+	// Function to die
 	UFUNCTION()
 		void Die();
 
 private:
-	
+
+	//Component to handle damage
 	UPROPERTY(VisibleAnywhere)
 		class UDamageHandlingComponent* DamageHandling;
-	
+
+	// Component to handle the healthbar
 	UPROPERTY(VisibleAnywhere)
 		class UHealthBardComponent* HealthBarWidget;
 };
