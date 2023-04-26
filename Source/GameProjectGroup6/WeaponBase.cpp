@@ -23,6 +23,7 @@ void AWeaponBase::BeginPlay()
 	Super::BeginPlay();
 	Bard = Cast<ABardPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	FluteCollision->OnComponentBeginOverlap.AddDynamic(this, &AWeaponBase::OnOverlap);
+	FluteCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 // Called every frame

@@ -27,7 +27,7 @@ void ACustomHUD::BeginPlay()
 		if(MenuWidget)
 		MenuWidget->AddToViewport(0);
 		UGameplayStatics::GetPlayerController(GetWorld(),0)->SetInputMode(UIOnly);
-		
+		UGameplayStatics::GetPlayerController(GetWorld(),0)->SetShowMouseCursor(true);
 		BardGameInstance->HasSpawnedMainMenu=true;
 	}
 	else
@@ -36,6 +36,8 @@ void ACustomHUD::BeginPlay()
 		if(UIWidget)
 		{
 			UGameplayStatics::GetPlayerController(GetWorld(),0)->SetInputMode(GameOnly);
+			UGameplayStatics::GetPlayerController(GetWorld(),0)->SetShowMouseCursor(false);
+			UGameplayStatics::GetPlayerCameraManager(this,0)->StartCameraFade(1,0,5,FLinearColor::Black);
 			UIWidget->AddToViewport(0);
 		}
 	}

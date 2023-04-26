@@ -56,7 +56,7 @@ void ABardPlayer::BeginPlay()
 	//When Hit play animation
 	this->OnTakeAnyDamage.AddDynamic(this, &ABardPlayer::PlayHitAnim);
 	AnimInstance->OnMontageEnded.AddDynamic(this,&ABardPlayer::WhenCompleted);
-
+	
 	//Enhanced Movement Input Context Init
 	IgnoredActors.Add(this);
 	APlayerController* PC = Cast<APlayerController>(GetController());
@@ -111,21 +111,20 @@ void ABardPlayer::CombatFunction()
 			{
 			if (FluteSlash)
 			{
-			//UNiagaraComponent* Slash = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), FluteSlash, GetActorLocation(),GetCharacterMovement()->GetLastUpdateRotation()-FRotator(0,140,0));
-			UNiagaraComponent*Slash2=UNiagaraFunctionLibrary::SpawnSystemAttached(FluteSlash,GetMesh(),"SlashSocket",GetMesh()->GetBoneLocation("SlashSocket"),FRotator::ZeroRotator,EAttachLocation::SnapToTargetIncludingScale,false);
-			PlayAnimMontage(FluteAttack);
+				
+				UNiagaraComponent*Slash2=UNiagaraFunctionLibrary::SpawnSystemAttached(FluteSlash,GetMesh(),"SlashSocket",GetMesh()->GetBoneLocation("SlashSocket"),FRotator::ZeroRotator,EAttachLocation::SnapToTargetIncludingScale,false);
+				PlayAnimMontage(FluteAttack);
 			
 			if(!SpawnedFlute)
 			{
 				SpawnedFlute=GetWorld()->SpawnActor<AActor>(Flute, Position, FRotator(90,0,0));
 				FluteRef=Cast<AWeaponBase>(SpawnedFlute);
 			}
-			IsFluting=true;
-			SpawnedFlute->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("FluteSocket"));
-			FluteRef->FluteCollision->Activate();
-			}
+				FluteRef->FluteCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+				IsFluting=true;
+				SpawnedFlute->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("FluteSocket"));
 			
-		
+			}
 		}
 		if (WeaponNumber == 2)
 		{
@@ -167,7 +166,6 @@ void ABardPlayer::CombatFunction()
 	}
 	
 }
-
 void ABardPlayer::CombatFunctionChargeClock()
 {
 	TimeSpent += GetWorld()->DeltaTimeSeconds;
@@ -219,8 +217,9 @@ void ABardPlayer::WhenCompleted(UAnimMontage* Montage, bool bInterrupted)
 	{
 		if(Montage==FluteAttack)
 		{
+			FluteRef->FluteCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 			IsFluting=false;
-			FluteRef->FluteCollision->Deactivate();
+			
 		}
 	}
 }
