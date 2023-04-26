@@ -26,6 +26,8 @@ void ACustomHUD::BeginPlay()
 	{
 		if(MenuWidget)
 		MenuWidget->AddToViewport(0);
+		UGameplayStatics::GetPlayerController(GetWorld(),0)->SetInputMode(UIOnly);
+		
 		BardGameInstance->HasSpawnedMainMenu=true;
 	}
 	else
@@ -33,6 +35,7 @@ void ACustomHUD::BeginPlay()
 		ClearWidgets();
 		if(UIWidget)
 		{
+			UGameplayStatics::GetPlayerController(GetWorld(),0)->SetInputMode(GameOnly);
 			UIWidget->AddToViewport(0);
 		}
 	}

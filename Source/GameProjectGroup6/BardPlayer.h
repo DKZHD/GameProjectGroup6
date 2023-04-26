@@ -79,7 +79,8 @@ public:
 	void ActivateMovement();
 	UFUNCTION()
 	void PlayHitAnim(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
-
+	UFUNCTION()
+	void WhenCompleted(UAnimMontage* Montage, bool bInterrupted);
 
 	//Variables
 	int WeaponNumber=1;
@@ -87,10 +88,13 @@ public:
 	FVector LineTraceStart;
 	FVector LineTraceEnd;
 	FRotator Direction;
-
+	float AnimDuration;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	bool IsDrumming;
-
+	UPROPERTY()
+	bool IsFluting;
+	UPROPERTY()
+	UAnimInstance* AnimInstance;
 	FHitResult Hit;
 	FCollisionQueryParams TraceHit;
 	float LerpAlpha;

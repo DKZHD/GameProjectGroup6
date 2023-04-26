@@ -9,6 +9,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "HealthBardComponent.h"
 #include "Components/SceneComponent.h"
+#include "Items.h"
+
 
 	// Sets default values
 AEnemy::AEnemy()
@@ -34,6 +36,7 @@ AEnemy::AEnemy()
 	HealthBarWidget = CreateDefaultSubobject<UHealthBardComponent>(TEXT("HealthBar"));
 	HealthBarWidget->SetupAttachment(GetRootComponent());
 }
+	
 
 // Called when the game starts or when spawned
 void AEnemy::BeginPlay()
@@ -101,6 +104,17 @@ void AEnemy::Die()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Dead");
 	this->Destroy();
+
+	Droprate = FMath::RandRange(1,50);
+	if(Droprate == 1)
+	{
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		SpawnParams.Instigator = GetInstigator();
+		FVector SpawnLocation = GetActorLocation();
+		FRotator SpawnRotation = GetActorRotation();
+		GetWorld()->SpawnActor<AActor>(ItemsToSpawn, SpawnLocation, SpawnRotation, SpawnParams);
+	}
 }
 
 

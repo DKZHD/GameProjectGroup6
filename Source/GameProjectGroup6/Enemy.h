@@ -21,6 +21,15 @@ public:
 		
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Enemy")
 		bool IsStunned;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
+		int Droprate;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+		class AItems* Item;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+		TSubclassOf<AItems> ItemsToSpawn;
 	
 
 	FTimerHandle Handle;

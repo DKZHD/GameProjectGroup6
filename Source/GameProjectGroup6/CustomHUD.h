@@ -32,6 +32,7 @@ public:
 	class UBardGameInstance* BardGameInstance;
 	
 	FInputModeGameOnly GameOnly;
+	FInputModeUIOnly UIOnly;
 	UFUNCTION()
 	void ClearWidgets();
 
