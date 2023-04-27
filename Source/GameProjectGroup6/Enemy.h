@@ -30,6 +30,14 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 		TSubclassOf<AItems> ItemsToSpawn;
+
+	//Bard Player
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	class ABardPlayer* Bard;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	class USphereComponent* Collider;
+
 	
 
 	FTimerHandle Handle;
@@ -60,6 +68,8 @@ public:
 	// Function to die
 	UFUNCTION()
 		void Die();
+	
+	TSubclassOf<UDamageType> BaseDamage;
 
 private:
 
@@ -70,4 +80,9 @@ private:
 	// Component to handle the healthbar
 	UPROPERTY(VisibleAnywhere)
 		class UHealthBardComponent* HealthBarWidget;
+	UFUNCTION()
+    	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+    	                    UPrimitiveComponent* OtherComponent,
+    	                    int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 };

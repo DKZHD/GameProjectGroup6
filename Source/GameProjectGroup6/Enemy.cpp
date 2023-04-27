@@ -3,13 +3,14 @@
 
 #include "Enemy.h"
 #include "DamageHandlingComponent.h"
-#include "EnemyActorComponent.h"
 #include "HealthBardComponent.h"
 #include "TimerManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "HealthBardComponent.h"
 #include "Components/SceneComponent.h"
 #include "Items.h"
+#include "Kismet/GameplayStatics.h"
+#include "BardPlayer.h"
+#include "Components/SphereComponent.h"
 
 
 	// Sets default values
@@ -35,6 +36,9 @@ AEnemy::AEnemy()
 	//Binds the health bar widget to the enemy
 	HealthBarWidget = CreateDefaultSubobject<UHealthBardComponent>(TEXT("HealthBar"));
 	HealthBarWidget->SetupAttachment(GetRootComponent());
+
+	Collider = CreateDefaultSubobject<USphereComponent>(TEXT("Collider"));
+	Collider->SetupAttachment(GetMesh(),"ColliderSocket");
 }
 	
 
@@ -47,6 +51,12 @@ void AEnemy::BeginPlay()
 
 	//Sets Enemy Health to Default Health
 	DamageHandling->Health = DamageHandling->DefaultHealth;
+
+	//Cast to bard player
+	Bard = Cast<ABardPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+	//Bind the OnOverlapBegin function
+	Collider -> OnComponentBeginOverlap.AddDynamic(this, &AEnemy::OnOverlapBegin);
 }
 
 // Called every frame
@@ -114,6 +124,21 @@ void AEnemy::Die()
 		FVector SpawnLocation = GetActorLocation();
 		FRotator SpawnRotation = GetActorRotation();
 		GetWorld()->SpawnActor<AActor>(ItemsToSpawn, SpawnLocation, SpawnRotation, SpawnParams);
+	}
+}
+
+void AEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	//Check if Bard cast worked
+	if(Bard)
+	{
+		//Check if the overlapping component is the bard player
+		if(OtherActor->IsA<ABardPlayer>())
+		{
+			GEngine->AddOnScreenDebugMessage(0,2.f,FColor::Magenta,"Player Hit!");
+			UGameplayStatics::ApplyDamage(Bard, 1, this->GetController(), this, UDamageType::StaticClass());
+			
+		}
 	}
 }
 
