@@ -112,7 +112,6 @@ void ABardPlayer::CombatFunction()
 			{
 			if (FluteSlash)
 			{
-				
 				UNiagaraComponent*Slash=UNiagaraFunctionLibrary::SpawnSystemAttached(FluteSlash,GetMesh(),"SlashSocket",GetMesh()->GetBoneLocation("SlashSocket"),FRotator::ZeroRotator,EAttachLocation::SnapToTargetIncludingScale,false);
 				PlayAnimMontage(FluteAttack);
 			
@@ -153,8 +152,6 @@ void ABardPlayer::CombatFunction()
 				SpawnedDrum = GetWorld()->SpawnActor<AActor>(Drum, FVector(Hit.Location), GetCharacterMovement()->GetLastUpdateRotation());
 		}
 		else { GEngine->AddOnScreenDebugMessage(0, 2.f, FColor::Red, "Failed"); }
-		if (DrumAOE)
-			
 			DrumStick1 = GetWorld()->SpawnActor<AActor>(DrumStick_BP,Position,FRotator::ZeroRotator);
 			DrumStick2 = GetWorld()->SpawnActor<AActor>(DrumStick_BP,Position,FRotator::ZeroRotator);
 			DrumStick1->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetIncludingScale,"DrumStickL");
@@ -201,6 +198,7 @@ void ABardPlayer::CombatFunctionRelease()
 
 void ABardPlayer::DoDamage(AActor* DamagedActor, float BaseDamage, AController* EventInstigator, AActor* DamageCauser, TSubclassOf<class UDamageType> DamageTypeClass)
 {
+
 }
 
 void ABardPlayer::ActivateMovement()
@@ -220,7 +218,7 @@ void ABardPlayer::WhenCompleted(UAnimMontage* Montage, bool bInterrupted)
 {
 	if(!bInterrupted)
 	{
-		if(Montage==FluteAttack&&Montage!=HitAnim)
+		if(Montage==FluteAttack)
 		{
 			FluteRef->FluteCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 			IsFluting=false;
@@ -230,6 +228,14 @@ void ABardPlayer::WhenCompleted(UAnimMontage* Montage, bool bInterrupted)
 		{
 			DrumStick1->Destroy();
 			DrumStick2->Destroy();
+		}
+	}
+	else
+	{
+		if(Montage==FluteAttack)
+		{
+			FluteRef->FluteCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			IsFluting=false;
 		}
 	}
 }
