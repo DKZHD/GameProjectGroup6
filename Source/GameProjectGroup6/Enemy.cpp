@@ -37,6 +37,7 @@ AEnemy::AEnemy()
 	HealthBarWidget = CreateDefaultSubobject<UHealthBardComponent>(TEXT("HealthBar"));
 	HealthBarWidget->SetupAttachment(GetRootComponent());
 
+	//Initiates the collider
 	Collider = CreateDefaultSubobject<USphereComponent>(TEXT("Collider"));
 	Collider->SetupAttachment(GetMesh(),"ColliderSocket");
 }
@@ -64,6 +65,7 @@ void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//Checks if enemy is attacking and sets the collision
 	if(CanAttack)
 	{
 		Collider -> SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
@@ -124,18 +126,20 @@ void AEnemy::Die()
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Dead");
 	this->Destroy();
 
-	Droprate = FMath::RandRange(1,50);
+	Droprate = FMath::RandRange(1,2);
 	if(Droprate == 1)
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Dropped");
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Owner = this;
 		SpawnParams.Instigator = GetInstigator();
 		FVector SpawnLocation = GetActorLocation();
-		FRotator SpawnRotation = GetActorRotation();
+		FRotator SpawnRotation = FRotator(0.f, -90.f, 0.f);
 		GetWorld()->SpawnActor<AActor>(ItemsToSpawn, SpawnLocation, SpawnRotation, SpawnParams);
 	}
 }
 
+//Check for overlap
 void AEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//Check if Bard cast worked
@@ -145,6 +149,8 @@ void AEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 		if(OtherActor->IsA<ABardPlayer>())
 		{
 			GEngine->AddOnScreenDebugMessage(0,2.f,FColor::Magenta,"Player Hit!");
+
+			//Applies damage to bard player
 			UGameplayStatics::ApplyDamage(Bard, 1, this->GetController(), this, UDamageType::StaticClass());
 			
 		}
