@@ -55,6 +55,7 @@ void ABardPlayer::BeginPlay()
 	AnimInstance=GetMesh()->GetAnimInstance();
 	//When Hit play animation
 	this->OnTakeAnyDamage.AddDynamic(this, &ABardPlayer::PlayHitAnim);
+	if(AnimInstance)
 	AnimInstance->OnMontageEnded.AddDynamic(this,&ABardPlayer::WhenCompleted);
 	
 	//Enhanced Movement Input Context Init
@@ -112,7 +113,7 @@ void ABardPlayer::CombatFunction()
 			if (FluteSlash)
 			{
 				
-				UNiagaraComponent*Slash2=UNiagaraFunctionLibrary::SpawnSystemAttached(FluteSlash,GetMesh(),"SlashSocket",GetMesh()->GetBoneLocation("SlashSocket"),FRotator::ZeroRotator,EAttachLocation::SnapToTargetIncludingScale,false);
+				UNiagaraComponent*Slash=UNiagaraFunctionLibrary::SpawnSystemAttached(FluteSlash,GetMesh(),"SlashSocket",GetMesh()->GetBoneLocation("SlashSocket"),FRotator::ZeroRotator,EAttachLocation::SnapToTargetIncludingScale,false);
 				PlayAnimMontage(FluteAttack);
 			
 			if(!SpawnedFlute)
@@ -131,7 +132,8 @@ void ABardPlayer::CombatFunction()
 		IsDrumming = true;
 		GetCharacterMovement()->MovementMode = EMovementMode::MOVE_None;
 		GetWorldTimerManager().SetTimer(Handle, this, &ABardPlayer::ActivateMovement,1.f,false,2.f);
-		//PlayAnimMontage(DrumAttack);
+		GetWorldTimerManager().SetTimer(DrumAOEHandle, this, &ABardPlayer::SpawnDrumAOE,1.f,false,1.2);
+		PlayAnimMontage(DrumAttack);
 		if (SpawnedFlute)
 		{
 			SpawnedFlute->Destroy();
@@ -149,12 +151,15 @@ void ABardPlayer::CombatFunction()
 		{
 			if(!SpawnedDrum)
 				SpawnedDrum = GetWorld()->SpawnActor<AActor>(Drum, FVector(Hit.Location), GetCharacterMovement()->GetLastUpdateRotation());
-			if (SpawnedDrum)
-				UGameplayStatics::ApplyRadialDamage(GetWorld(), 1.f, DrumSpawn->GetComponentLocation(), 500.f, BaseDamageType, IgnoredActors);
 		}
 		else { GEngine->AddOnScreenDebugMessage(0, 2.f, FColor::Red, "Failed"); }
 		if (DrumAOE)
-			UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), DrumAOE, Hit.Location+FVector(0,0,1));
+			
+			DrumStick1 = GetWorld()->SpawnActor<AActor>(DrumStick_BP,Position,FRotator::ZeroRotator);
+			DrumStick2 = GetWorld()->SpawnActor<AActor>(DrumStick_BP,Position,FRotator::ZeroRotator);
+			DrumStick1->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetIncludingScale,"DrumStickL");
+			DrumStick2->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetIncludingScale,"DrumStickR");
+			
 	}
 		if (WeaponNumber==3)
 		{
@@ -215,13 +220,25 @@ void ABardPlayer::WhenCompleted(UAnimMontage* Montage, bool bInterrupted)
 {
 	if(!bInterrupted)
 	{
-		if(Montage==FluteAttack)
+		if(Montage==FluteAttack&&Montage!=HitAnim)
 		{
 			FluteRef->FluteCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 			IsFluting=false;
 			
 		}
+		if(Montage==DrumAttack&&Montage!=HitAnim)
+		{
+			DrumStick1->Destroy();
+			DrumStick2->Destroy();
+		}
 	}
+}
+
+void ABardPlayer::SpawnDrumAOE()
+{
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), DrumAOE, Hit.Location+FVector(0,0,1));
+	if (SpawnedDrum)
+		UGameplayStatics::ApplyRadialDamage(GetWorld(), 1.f, DrumSpawn->GetComponentLocation(), 500.f, BaseDamageType, IgnoredActors);
 }
 
 void ABardPlayer::Weaponswap()

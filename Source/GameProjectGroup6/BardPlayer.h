@@ -35,6 +35,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AWeaponBase> Drum;
 	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> DrumStick_BP;
+	UPROPERTY(EditAnywhere)
 	TSubclassOf<AWeaponBase> Harp;
 	UPROPERTY(EditAnywhere)
 	USceneComponent* DrumSpawn;
@@ -44,7 +46,10 @@ public:
 	AWeaponBase* FluteRef;
 
 	//Handles
+	UPROPERTY()
 	FTimerHandle Handle;
+	UPROPERTY()
+	FTimerHandle DrumAOEHandle;
 
 	//Systems
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -81,13 +86,20 @@ public:
 	void PlayHitAnim(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 	UFUNCTION()
 	void WhenCompleted(UAnimMontage* Montage, bool bInterrupted);
+	UFUNCTION()
+	void SpawnDrumAOE();
 
 	//Variables
 	int WeaponNumber=1;
+	UPROPERTY()
 	FVector Position;
+	UPROPERTY()
 	FVector LineTraceStart;
+	UPROPERTY()
 	FVector LineTraceEnd;
+	UPROPERTY()
 	FRotator Direction;
+	UPROPERTY()
 	float AnimDuration;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	bool IsDrumming;
@@ -106,11 +118,18 @@ public:
 		float Health = 5;
 
 	//Ignored
+	UPROPERTY()
 	TArray<AActor*> IgnoredActors;
 
 	//Spawned Components
-	AActor* SpawnedFlute=nullptr;
+	UPROPERTY()
+	AActor* SpawnedFlute = nullptr;
+	UPROPERTY()
 	AActor* SpawnedDrum = nullptr;
+	UPROPERTY()
+	AActor* DrumStick1 = nullptr;
+	UPROPERTY()
+	AActor* DrumStick2 = nullptr;
 
 	//AnimMontages
 	UPROPERTY(EditAnywhere, Category = "Custom Animations")
