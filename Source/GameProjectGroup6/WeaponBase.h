@@ -19,6 +19,8 @@ public:
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* Mesh;
 	class ABardPlayer* Bard;
+	UPROPERTY()
+	class AEnemy* Enemy;
 
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* FluteCollision;
