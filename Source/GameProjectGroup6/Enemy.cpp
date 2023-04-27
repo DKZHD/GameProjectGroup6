@@ -64,6 +64,15 @@ void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if(CanAttack)
+	{
+		Collider -> SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	}
+	if(!CanAttack)
+	{
+		Collider -> SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+
 	// Checks DamageHandling to see if Enemy is dead
 	if(DamageHandling->IsDead)
 	{
