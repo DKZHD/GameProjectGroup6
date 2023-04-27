@@ -16,26 +16,32 @@ public:
 	AEnemy();
 	
 
+	//Bool if enemy is attacking
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Enemy")
 		bool CanAttack;
-		
+
+	//Bool if the enemy is stunned 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Enemy")
 		bool IsStunned;
 
+	//Droprate of the item
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
 		int Droprate;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	//Refference to the item
+	UPROPERTY()
 		class AItems* Item;
 
+	//Item to spawn
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 		TSubclassOf<AItems> ItemsToSpawn;
 
 	//Bard Player
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	UPROPERTY()
 	class ABardPlayer* Bard;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	//Collider
+	UPROPERTY()
 	class USphereComponent* Collider;
 
 	
@@ -80,6 +86,8 @@ private:
 	// Component to handle the healthbar
 	UPROPERTY(VisibleAnywhere)
 		class UHealthBardComponent* HealthBarWidget;
+
+	//Checks for overlap
 	UFUNCTION()
     	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
     	                    UPrimitiveComponent* OtherComponent,

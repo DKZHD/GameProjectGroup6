@@ -6,6 +6,8 @@
 #include "Enemy.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/BoxComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Components/SphereComponent.h"
 // Sets default values
 AWeaponBase::AWeaponBase()
 {
@@ -35,8 +37,14 @@ void AWeaponBase::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 {
 	if(OtherActor->IsA<AEnemy>())
 	{
-		UGameplayStatics::ApplyDamage(OtherActor,.5,UGameplayStatics::GetPlayerController(GetWorld(),0),this,BaseDamage);
-		GEngine->AddOnScreenDebugMessage(0,2.f,FColor::Magenta,"It Hit!");
+		Enemy=Cast<AEnemy>(OtherActor);
+		if(!Enemy->Collider->IsOverlappingComponent(FluteCollision))
+			UGameplayStatics::ApplyDamage(OtherActor,.5,UGameplayStatics::GetPlayerController(GetWorld(),0),this,BaseDamage);
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(0,2.f,FColor::Magenta,"It weeee Hit!");
+		}
+		
 	}
 }
 
