@@ -150,7 +150,7 @@ void ABardPlayer::CombatFunction()
 			if(!SpawnedDrum)
 				SpawnedDrum = GetWorld()->SpawnActor<AActor>(Drum, FVector(Hit.Location), GetCharacterMovement()->GetLastUpdateRotation());
 			if (SpawnedDrum)
-				UGameplayStatics::ApplyRadialDamage(GetWorld(), 1.f, DrumSpawn->GetComponentLocation(), 1500.f, BaseDamageType, IgnoredActors);
+				UGameplayStatics::ApplyRadialDamage(GetWorld(), 1.f, DrumSpawn->GetComponentLocation(), 500.f, BaseDamageType, IgnoredActors);
 		}
 		else { GEngine->AddOnScreenDebugMessage(0, 2.f, FColor::Red, "Failed"); }
 		if (DrumAOE)
