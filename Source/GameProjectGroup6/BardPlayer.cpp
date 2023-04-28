@@ -2,6 +2,7 @@
 
 #include "BardPlayer.h"
 
+#include "CustomHUD.h"
 #include "DamageHandlingComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -14,6 +15,7 @@
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "DrawDebugHelpers.h"
+#include "Blueprint/UserWidget.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -92,6 +94,7 @@ void ABardPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EPI->BindAction(CombatAction, ETriggerEvent::Triggered, this, &ABardPlayer::CombatFunctionChargeClock);
 		EPI->BindAction(CombatAction, ETriggerEvent::Completed, this, &ABardPlayer::CombatFunctionRelease);
 		EPI->BindAction(SwapWeapon, ETriggerEvent::Started, this, &ABardPlayer::Weaponswap);
+		EPI->BindAction(Pause, ETriggerEvent::Started, this, &ABardPlayer::PauseFunction);
 	}
 }
 //Movement
@@ -245,6 +248,14 @@ void ABardPlayer::SpawnDrumAOE()
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), DrumAOE, Hit.Location+FVector(0,0,1));
 	if (SpawnedDrum)
 		UGameplayStatics::ApplyRadialDamage(GetWorld(), 1.f, DrumSpawn->GetComponentLocation(), 500.f, BaseDamageType, IgnoredActors);
+}
+
+void ABardPlayer::PauseFunction()
+{
+	const ACustomHUD* CustomHUD=Cast<ACustomHUD>(UGameplayStatics::GetPlayerController(this,0)->GetHUD());
+	CustomHUD->UIWidget->RemoveFromParent();
+	PauseScreenRef=CreateWidget<UUserWidget>(GetWorld(),PauseScreen);
+	PauseScreenRef->AddToViewport(0);
 }
 
 void ABardPlayer::Weaponswap()

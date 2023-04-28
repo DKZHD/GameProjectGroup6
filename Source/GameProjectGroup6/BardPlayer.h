@@ -66,6 +66,8 @@ public:
 		UInputAction* CombatAction;
 	UPROPERTY(EditAnywhere)
 		UInputAction* SwapWeapon;
+	UPROPERTY(EditAnywhere)
+		UInputAction* Pause;
 
 	//Functions
 	UFUNCTION()
@@ -88,6 +90,8 @@ public:
 	void WhenCompleted(UAnimMontage* Montage, bool bInterrupted);
 	UFUNCTION()
 	void SpawnDrumAOE();
+	UFUNCTION()
+	void PauseFunction();
 
 	//Variables
 	int WeaponNumber=1;
@@ -111,7 +115,10 @@ public:
 	FCollisionQueryParams TraceHit;
 	float LerpAlpha;
 	float TimeSpent;
-
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UUserWidget> PauseScreen;
+	UPROPERTY()
+	UUserWidget* PauseScreenRef;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UDamageType> BaseDamageType;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
