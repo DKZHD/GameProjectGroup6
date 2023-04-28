@@ -123,8 +123,10 @@ public:
 	UUserWidget* PauseScreenRef;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UDamageType> BaseDamageType;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		float Health = 5;
+	UPROPERTY()
+	APlayerCameraManager* CameraManager;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UCameraShakeBase> BP_DrumShake;
 
 	//Ignored
 	UPROPERTY()

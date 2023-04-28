@@ -54,12 +54,18 @@ ABardPlayer::ABardPlayer()
 void ABardPlayer::BeginPlay()
 {
 	Super::BeginPlay();
+	
 	AnimInstance=GetMesh()->GetAnimInstance();
+	CameraManager=UGameplayStatics::GetPlayerCameraManager(this,0);
 	//When Hit play animation
 	this->OnTakeAnyDamage.AddDynamic(this, &ABardPlayer::PlayHitAnim);
+	
 	if(AnimInstance)
-	AnimInstance->OnMontageEnded.AddDynamic(this,&ABardPlayer::WhenCompleted);
-	AnimInstance->OnPlayMontageNotifyBegin.AddDynamic(this,&ABardPlayer::AnimNotifyBegin);
+	{
+		AnimInstance->OnMontageEnded.AddDynamic(this,&ABardPlayer::WhenCompleted);
+		AnimInstance->OnPlayMontageNotifyBegin.AddDynamic(this,&ABardPlayer::AnimNotifyBegin);
+	}
+	
 	
 	//Enhanced Movement Input Context Init
 	IgnoredActors.Add(this);
@@ -271,7 +277,12 @@ void ABardPlayer::AnimNotifyBegin(FName NotifyName, const FBranchingPointNotifyP
 		FluteRef->FluteCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 		GEngine->AddOnScreenDebugMessage(-1,2.f,FColor::Blue,"2nd");
 	}
-	
+	if(NotifyName=="Drum1")
+		CameraManager->StartCameraShake(BP_DrumShake,.5);
+	if(NotifyName=="Drum2")
+		CameraManager->StartCameraShake(BP_DrumShake,.5);
+	if(NotifyName=="Drum3")
+		CameraManager->StartCameraShake(BP_DrumShake,3);
 }
 
 
