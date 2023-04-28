@@ -19,5 +19,9 @@ class GAMEPROJECTGROUP6_API UBardGameInstance : public UGameInstance
 public:
 	UPROPERTY()
 	bool HasSpawnedMainMenu=false;
+	UPROPERTY()
+	bool CheckedBox=false;
+	UPROPERTY()
+	FString WindowState;
 	
 };

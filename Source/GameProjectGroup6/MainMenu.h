@@ -18,6 +18,8 @@ public:
 		class UButton* StartGame;
 	UPROPERTY(EditAnywhere,meta=(BindWidget))
 	UButton* ExitGame;
+	UPROPERTY(EditAnywhere,meta=(BindWidget))
+	UButton* Settings;
 	UPROPERTY()
 	class ACustomHUD* HUD;
 
@@ -25,6 +27,8 @@ public:
 
 	UFUNCTION()
 		void StartGameButtonClicked();
+	UFUNCTION()
+		void SettingsButton();
 	UFUNCTION()
 		void EndGameClicked();
 };

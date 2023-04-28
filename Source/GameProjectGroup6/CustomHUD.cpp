@@ -21,6 +21,7 @@ void ACustomHUD::BeginPlay()
 	Super::BeginPlay();
 	MenuWidget=CreateWidget<UUserWidget>(GetWorld(), MainMenu_BP);
 	UIWidget=CreateWidget<UUserWidget>(GetWorld(), UI_BP);
+	SettingsScreen=CreateWidget<UUserWidget>(GetWorld(), Settings_BP);
 	BardGameInstance=Cast<UBardGameInstance>(GetGameInstance());
 	if(!BardGameInstance->HasSpawnedMainMenu)
 	{

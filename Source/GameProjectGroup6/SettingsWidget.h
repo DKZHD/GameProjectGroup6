@@ -7,6 +7,7 @@
 #include "SettingsWidget.generated.h"
 
 
+
 /**
  * 
  */
@@ -18,10 +19,30 @@ class GAMEPROJECTGROUP6_API USettingsWidget : public UUserWidget
 	virtual void NativePreConstruct() override;
 public:
 	virtual void NativeConstruct() override;
+	//Widgets
 	UPROPERTY(meta=(BindWidget))
 	class UComboBoxString* WindowSettings;
+	UPROPERTY(meta=(BindWidget))
+	class UCheckBox* toggleVSYNC;
+	UPROPERTY(meta=(BindWidget))
+	class UButton* ApplyActiveChanges;
+	UPROPERTY(meta=(BindWidget))
+	class UButton* Return;
+	UPROPERTY()
+	class UBardGameInstance* BardGameInstance;
+	UPROPERTY()
+	class ACustomHUD* CustomHUD;
+
+	UPROPERTY()
+	UGameUserSettings* UserSettings;
+	UFUNCTION()
+	void VSyncFunction(bool bIsChecked);
+	UFUNCTION()
+	void ApplyChangesFunction();
 	UFUNCTION()
 	void WindowModeFunction(FString SelectedItem, ESelectInfo::Type SelectionType);
+	UFUNCTION()
+	void GoBack();
 	
 	
 };

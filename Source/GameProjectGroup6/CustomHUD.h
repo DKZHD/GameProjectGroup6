@@ -23,6 +23,8 @@ public:
 		TSubclassOf<UUserWidget> MainMenu_BP;
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<UUserWidget> UI_BP;
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<UUserWidget> Settings_BP;
 	UPROPERTY()
 	class UUserWidget* MenuWidget;
 	UPROPERTY()
@@ -30,6 +32,8 @@ public:
 
 	UPROPERTY()
 	class UBardGameInstance* BardGameInstance;
+	UPROPERTY()
+	UUserWidget* SettingsScreen;
 	
 	FInputModeGameOnly GameOnly;
 	FInputModeUIOnly UIOnly;
