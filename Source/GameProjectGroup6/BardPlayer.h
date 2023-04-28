@@ -92,6 +92,8 @@ public:
 	void SpawnDrumAOE();
 	UFUNCTION()
 	void PauseFunction();
+	UFUNCTION()
+	void AnimNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload);
 
 	//Variables
 	int WeaponNumber=1;

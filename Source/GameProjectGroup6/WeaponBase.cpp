@@ -38,11 +38,14 @@ void AWeaponBase::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 	if(OtherActor->IsA<AEnemy>())
 	{
 		Enemy=Cast<AEnemy>(OtherActor);
-		if(!Enemy->Collider->IsOverlappingComponent(FluteCollision))
+		if(OtherComp==Enemy->GetCapsuleComponent())
+		{
 			UGameplayStatics::ApplyDamage(OtherActor,.5,UGameplayStatics::GetPlayerController(GetWorld(),0),this,BaseDamage);
+			GEngine->AddOnScreenDebugMessage(-1,2.f,FColor::Magenta,"It weeee Hit!");
+		}
 		else
 		{
-			GEngine->AddOnScreenDebugMessage(0,2.f,FColor::Magenta,"It weeee Hit!");
+			
 		}
 		
 	}

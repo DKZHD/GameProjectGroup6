@@ -40,6 +40,7 @@ AEnemy::AEnemy()
 	//Initiates the collider
 	Collider = CreateDefaultSubobject<USphereComponent>(TEXT("Collider"));
 	Collider->SetupAttachment(GetMesh(),"ColliderSocket");
+	Collider->SetCollisionProfileName("IgnoreOnlyPawn");
 }
 	
 
@@ -65,15 +66,15 @@ void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//Checks if enemy is attacking and sets the collision
-	if(CanAttack)
-	{
-		Collider -> SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	}
-	if(!CanAttack)
-	{
-		Collider -> SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	}
+	// Checks if enemy is attacking and sets the collision
+	 if(CanAttack)
+	 {
+	 	Collider ->SetCollisionProfileName("OverlapOnlyPawn");
+	 }
+	 if(!CanAttack)
+	 {
+	 	Collider ->SetCollisionProfileName("IgnoreOnlyPawn");
+	 }
 
 	// Checks DamageHandling to see if Enemy is dead
 	if(DamageHandling->IsDead)

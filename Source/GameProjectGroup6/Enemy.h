@@ -41,7 +41,7 @@ public:
 	class ABardPlayer* Bard;
 
 	//Collider
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 	class USphereComponent* Collider;
 
 	

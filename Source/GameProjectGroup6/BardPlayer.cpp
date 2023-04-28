@@ -59,6 +59,7 @@ void ABardPlayer::BeginPlay()
 	this->OnTakeAnyDamage.AddDynamic(this, &ABardPlayer::PlayHitAnim);
 	if(AnimInstance)
 	AnimInstance->OnMontageEnded.AddDynamic(this,&ABardPlayer::WhenCompleted);
+	AnimInstance->OnPlayMontageNotifyBegin.AddDynamic(this,&ABardPlayer::AnimNotifyBegin);
 	
 	//Enhanced Movement Input Context Init
 	IgnoredActors.Add(this);
@@ -257,6 +258,22 @@ void ABardPlayer::PauseFunction()
 	PauseScreenRef=CreateWidget<UUserWidget>(GetWorld(),PauseScreen);
 	PauseScreenRef->AddToViewport(0);
 }
+
+void ABardPlayer::AnimNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload)
+{
+	if(NotifyName=="1st")
+	{
+		FluteRef->FluteCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GEngine->AddOnScreenDebugMessage(-1,2.f,FColor::Blue,"1st");
+	}
+	if(NotifyName=="2nd")
+	{
+		FluteRef->FluteCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		GEngine->AddOnScreenDebugMessage(-1,2.f,FColor::Blue,"2nd");
+	}
+	
+}
+
 
 void ABardPlayer::Weaponswap()
 {
