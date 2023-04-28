@@ -13,10 +13,4 @@ UCLASS()
 class GAMEPROJECTGROUP6_API UDrumCameraShake : public UCameraShakeBase
 {
 	GENERATED_BODY()
-public:
-	void UCameraShakeBase(const FObjectInitializer& ObjectInitializer);
-	UPROPERTY()
-	class UCameraShakeBase* CameraShakeBase;
-	UPROPERTY()
-	UCameraShakePattern* Perlin;
 };
