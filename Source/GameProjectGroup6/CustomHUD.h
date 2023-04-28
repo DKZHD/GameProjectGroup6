@@ -24,16 +24,18 @@ public:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<UUserWidget> UI_BP;
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<UUserWidget> Settings_BP;
+		TSubclassOf<class USettingsWidget> Settings_BP;
 	UPROPERTY()
 	class UUserWidget* MenuWidget;
 	UPROPERTY()
 	class UUserWidget* UIWidget;
-
+	UPROPERTY()
+	class USettingsWidget* SettingsScreen;
 	UPROPERTY()
 	class UBardGameInstance* BardGameInstance;
 	UPROPERTY()
-	UUserWidget* SettingsScreen;
+	FString OptionSelected;
+	
 	
 	FInputModeGameOnly GameOnly;
 	FInputModeUIOnly UIOnly;

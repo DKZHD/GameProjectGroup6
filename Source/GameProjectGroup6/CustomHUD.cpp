@@ -5,10 +5,13 @@
 
 #include "BardGameInstance.h"
 #include "MainMenu.h"
+#include "SettingsWidget.h"
 #include "UI.h"
 #include "Blueprint/UserWidget.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
+#include "Components/ComboBoxString.h"
 #include "Kismet/GameplayStatics.h"
+#include "Runtime/Engine/Classes/GameFramework/GameUserSettings.h"
 
 
 ACustomHUD::ACustomHUD()
@@ -21,7 +24,12 @@ void ACustomHUD::BeginPlay()
 	Super::BeginPlay();
 	MenuWidget=CreateWidget<UUserWidget>(GetWorld(), MainMenu_BP);
 	UIWidget=CreateWidget<UUserWidget>(GetWorld(), UI_BP);
-	SettingsScreen=CreateWidget<UUserWidget>(GetWorld(), Settings_BP);
+	SettingsScreen=CreateWidget<USettingsWidget>(GetWorld(), Settings_BP);
+	UGameUserSettings* UserSettings=Cast<UGameUserSettings>(GEngine->GetGameUserSettings());
+	
+	OptionSelected=SettingsScreen->WindowSettings->GetSelectedOption();
+	SettingsScreen->WindowModeFunction(SettingsScreen->WindowSettings->GetSelectedOption(),ESelectInfo::Direct);
+	
 	BardGameInstance=Cast<UBardGameInstance>(GetGameInstance());
 	if(!BardGameInstance->HasSpawnedMainMenu)
 	{
