@@ -26,7 +26,7 @@ public:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<class USettingsWidget> Settings_BP;
 	UPROPERTY()
-	class UUserWidget* MenuWidget;
+	class UMainMenu* MenuWidget;
 	UPROPERTY()
 	class UUserWidget* UIWidget;
 	UPROPERTY()

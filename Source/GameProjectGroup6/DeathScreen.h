@@ -4,32 +4,29 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "PauseScreen.generated.h"
-
+#include "DeathScreen.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class GAMEPROJECTGROUP6_API UPauseScreen : public UUserWidget
+class GAMEPROJECTGROUP6_API UDeathScreen : public UUserWidget
 {
 	GENERATED_BODY()
+	UPROPERTY(EditAnywhere,meta=(BindWidget))
+	class UButton* Retry;
+	UPROPERTY(EditAnywhere,meta=(BindWidget))
+	UButton* Menu;
+	UPROPERTY(EditAnywhere,meta=(BindWidget))
+	UButton* Quit;
+
 	virtual void NativeConstruct() override;
-	UPROPERTY(EditAnywhere,meta=(BindWidget))
-	class UButton* ResumeGame;
-	UPROPERTY(EditAnywhere,meta=(BindWidget))
-	UButton* MainMenu;
-	UPROPERTY(EditAnywhere,meta=(BindWidget))
-	UButton* OptionsButton;
-
 	UFUNCTION()
-	void ResumeButtonClicked();
+	void RetryFunction();
 	UFUNCTION()
-	void MenuButtonClicked();
+	void MenuFunction();
 	UFUNCTION()
-	void OptionsButtonClicked();
+	void QuitFunction();
+	FInputModeUIOnly UIOnly;
 	FInputModeGameOnly Game;
-	FInputModeUIOnly UI;
-	
-
 };

@@ -57,6 +57,7 @@ void ABardPlayer::BeginPlay()
 	
 	AnimInstance=GetMesh()->GetAnimInstance();
 	CameraManager=UGameplayStatics::GetPlayerCameraManager(this,0);
+	DamageHandlingComponent->Health=5;
 	//When Hit play animation
 	this->OnTakeAnyDamage.AddDynamic(this, &ABardPlayer::PlayHitAnim);
 	
@@ -208,7 +209,7 @@ void ABardPlayer::CombatFunctionRelease()
 
 void ABardPlayer::DoDamage(AActor* DamagedActor, float BaseDamage, AController* EventInstigator, AActor* DamageCauser, TSubclassOf<class UDamageType> DamageTypeClass)
 {
-
+	
 }
 
 void ABardPlayer::ActivateMovement()
@@ -222,6 +223,13 @@ void ABardPlayer::ActivateMovement()
 void ABardPlayer::PlayHitAnim(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
 	PlayAnimMontage(HitAnim);
+	if(DamageHandlingComponent->Health<=0)
+	{
+		ACustomHUD* CustomHUD=Cast<ACustomHUD>(UGameplayStatics::GetPlayerController(this,0)->GetHUD());
+		CustomHUD->UIWidget->RemoveFromParent();
+		UUserWidget* Death=CreateWidget<UUserWidget>(GetWorld(),DeathScreen);
+		Death->AddToViewport(0);
+	}
 }
 
 void ABardPlayer::WhenCompleted(UAnimMontage* Montage, bool bInterrupted)

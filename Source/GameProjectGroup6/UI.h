@@ -17,6 +17,9 @@ class GAMEPROJECTGROUP6_API UUI : public UUserWidget
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 		class UProgressBar* HP_Bar;
 
+	UPROPERTY()
+	float Health;
+	
 	virtual void NativeConstruct() override;
 
 	UPROPERTY(EditAnywhere)

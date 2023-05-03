@@ -29,6 +29,7 @@ void UMainMenu::SettingsButton()
 {
 	ACustomHUD* CustomHUD=Cast<ACustomHUD>(UGameplayStatics::GetPlayerController(this,0)->GetHUD());
 	CustomHUD->MenuWidget->RemoveFromParent();
+	OpenedFromMenu=true;
 	CustomHUD->SettingsScreen->AddToViewport(0);
 }
 

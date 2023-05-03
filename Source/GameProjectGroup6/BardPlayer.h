@@ -119,6 +119,8 @@ public:
 	float TimeSpent;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UUserWidget> PauseScreen;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UUserWidget> DeathScreen;
 	UPROPERTY()
 	UUserWidget* PauseScreenRef;
 	UPROPERTY(EditAnywhere)

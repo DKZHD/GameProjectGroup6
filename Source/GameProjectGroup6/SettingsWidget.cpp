@@ -4,7 +4,9 @@
 #include "SettingsWidget.h"
 
 #include "BardGameInstance.h"
+#include "BardPlayer.h"
 #include "CustomHUD.h"
+#include "MainMenu.h"
 #include "Components/Button.h"
 #include "Components/CheckBox.h"
 #include "Components/ComboBoxString.h"
@@ -100,7 +102,18 @@ void USettingsWidget::WindowModeFunction(FString SelectedItem, ESelectInfo::Type
 
 void USettingsWidget::GoBack()
 {
-	CustomHUD->MenuWidget->AddToViewport();
+	UBardGameInstance* GameInstance=Cast<UBardGameInstance>(GetGameInstance());
+	if(CustomHUD->MenuWidget->OpenedFromMenu)
+	{
+		CustomHUD->MenuWidget->AddToViewport();
+		CustomHUD->MenuWidget->OpenedFromMenu=false;
+	}
+	
+	else if(GameInstance->HasSpawnedMainMenu)
+	{
+		ABardPlayer* BardPlayer=Cast<ABardPlayer>(UGameplayStatics::GetPlayerCharacter(this,0));
+		BardPlayer->PauseScreenRef->AddToViewport(0);
+	}
 	RemoveFromParent();
 }
 

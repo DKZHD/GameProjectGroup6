@@ -22,7 +22,7 @@ ACustomHUD::ACustomHUD()
 void ACustomHUD::BeginPlay()
 {
 	Super::BeginPlay();
-	MenuWidget=CreateWidget<UUserWidget>(GetWorld(), MainMenu_BP);
+	MenuWidget=CreateWidget<UMainMenu>(GetWorld(), MainMenu_BP);
 	UIWidget=CreateWidget<UUserWidget>(GetWorld(), UI_BP);
 	SettingsScreen=CreateWidget<USettingsWidget>(GetWorld(), Settings_BP);
 	UGameUserSettings* UserSettings=Cast<UGameUserSettings>(GEngine->GetGameUserSettings());

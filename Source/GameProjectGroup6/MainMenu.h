@@ -23,6 +23,9 @@ public:
 	UPROPERTY()
 	class ACustomHUD* HUD;
 
+	UPROPERTY()
+	bool OpenedFromMenu=false;
+	
 	virtual void NativeConstruct() override;
 
 	UFUNCTION()
