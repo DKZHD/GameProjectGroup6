@@ -14,7 +14,7 @@ AItems::AItems()
 	PrimaryActorTick.bCanEverTick = true;
 
 	//Initialize the StaticMesh
-	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
+	StaticMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("StaticMesh"));
 	SetRootComponent(StaticMesh);
 
 	//Initialize the Collider

@@ -18,7 +18,7 @@ public:
 
 	//Mesh Component
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-		UStaticMeshComponent* StaticMesh;
+		class USkeletalMeshComponent* StaticMesh;
 
 	//Collusion Component
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
