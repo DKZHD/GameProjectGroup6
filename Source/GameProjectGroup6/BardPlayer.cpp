@@ -18,6 +18,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
 
 // Sets default values
 ABardPlayer::ABardPlayer()
@@ -181,7 +182,26 @@ void ABardPlayer::CombatFunction()
 }
 void ABardPlayer::CombatFunctionChargeClock()
 {
-	TimeSpent += GetWorld()->DeltaTimeSeconds;
+	if(WeaponNumber==3)
+	{
+		TimeSpent += GetWorld()->DeltaTimeSeconds;
+		if(TimeSpent < 1 && TimeSpent > 0&&!bHarpSound1)
+		{
+			UGameplayStatics::PlaySound2D(this,Harp1);
+			bHarpSound1=true;
+		}
+		if(TimeSpent < 2 && TimeSpent > 1&&!bHarpSound2)
+		{
+			UGameplayStatics::PlaySound2D(this,Harp2);
+			bHarpSound2=true;
+		}
+		if(TimeSpent > 2&&!bHarpSound3)
+		{
+			UGameplayStatics::PlaySound2D(this,Harp3);
+			bHarpSound3=true;
+		}
+	}
+	
 }
 
 void ABardPlayer::CombatFunctionRelease()
@@ -191,19 +211,22 @@ void ABardPlayer::CombatFunctionRelease()
 		if(TimeSpent < 1 && TimeSpent > 0)
 		{
 			GEngine->AddOnScreenDebugMessage(0,1,FColor::Red, TEXT("1 Damage"));
-			//GetWorld()->SpawnActor<AArrow>(Arrow, GetActorLocation()+FVector(100,0,0), FRotator(GetActorRotation().Yaw));
+			UGameplayStatics::PlaySound2D(this, HarpReleased1);
 		}
 		if(TimeSpent < 2 && TimeSpent > 1)
 		{
 			GEngine->AddOnScreenDebugMessage(0,1,FColor::Red, TEXT("2 Damage"));
-			//GetWorld()->SpawnActor<AArrow>(Arrow, GetActorLocation()+FVector(100,0,0), FRotator(GetActorRotation().Yaw));
+			UGameplayStatics::PlaySound2D(this, HarpReleased2);
 		}
 		if(TimeSpent > 2)
 		{
 			GEngine->AddOnScreenDebugMessage(0,1,FColor::Red, TEXT("3 Damage"));
-			//GetWorld()->SpawnActor<AArrow>(Arrow, GetActorLocation()+FVector(100,0,0), FRotator(GetActorRotation().Yaw));
+			UGameplayStatics::PlaySound2D(this, HarpReleased3);
 		}
 		TimeSpent = 0;
+		bHarpSound1=false;
+		bHarpSound2=false;
+		bHarpSound3=false;
 	}
 }
 

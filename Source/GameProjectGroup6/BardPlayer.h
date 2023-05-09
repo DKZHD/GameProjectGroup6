@@ -30,19 +30,19 @@ public:
 	class UCameraComponent* Camera;
 
 	//Weapons
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Flute")
 	TSubclassOf<class AWeaponBase> Flute;
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class AWeaponBase> Drum;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Drum")
+	TSubclassOf<AWeaponBase> Drum;
+	UPROPERTY(EditAnywhere, Category="Drum")
 	TSubclassOf<AActor> DrumStick_BP;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Harp")
 	TSubclassOf<AWeaponBase> Harp;
 	UPROPERTY(EditAnywhere)
 	USceneComponent* DrumSpawn;
 	UPROPERTY(EditAnywhere)
 	class UDamageHandlingComponent* DamageHandlingComponent;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
 	AWeaponBase* FluteRef;
 
 	//Handles
@@ -52,21 +52,21 @@ public:
 	FTimerHandle DrumAOEHandle;
 
 	//Systems
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Flute")
 		class UNiagaraSystem* FluteSlash;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Drum")
 		class UNiagaraSystem* DrumAOE;
 
 	//Input
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Input")
 		class UInputMappingContext* IMC;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Input")
 		class UInputAction* Move;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Input")
 		UInputAction* CombatAction;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Input")
 		UInputAction* SwapWeapon;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Input")
 		UInputAction* Pause;
 
 	//Functions
@@ -117,19 +117,41 @@ public:
 	FCollisionQueryParams TraceHit;
 	float LerpAlpha;
 	float TimeSpent;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="User Widgets")
 	TSubclassOf<UUserWidget> PauseScreen;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="User Widgets")
 	TSubclassOf<UUserWidget> DeathScreen;
 	UPROPERTY()
 	UUserWidget* PauseScreenRef;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Damage Type")
 	TSubclassOf<UDamageType> BaseDamageType;
 	UPROPERTY()
 	APlayerCameraManager* CameraManager;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Drum")
 	TSubclassOf<UCameraShakeBase> BP_DrumShake;
 
+	//Sounds
+	UPROPERTY(EditAnywhere, Category="Harp")
+	USoundBase* Harp1;
+	UPROPERTY(EditAnywhere, Category="Harp")
+	USoundBase* Harp2;
+	UPROPERTY(EditAnywhere, Category="Harp")
+	USoundBase* Harp3;
+	UPROPERTY(EditAnywhere, Category="Harp")
+	USoundBase* HarpReleased1;
+	UPROPERTY(EditAnywhere, Category="Harp")
+	USoundBase* HarpReleased2;
+	UPROPERTY(EditAnywhere, Category="Harp")
+	USoundBase* HarpReleased3;
+
+	//Bools for Sounds
+	UPROPERTY()
+	bool bHarpSound1;
+	UPROPERTY()
+	bool bHarpSound2;
+	UPROPERTY()
+	bool bHarpSound3;
+	
 	//Ignored
 	UPROPERTY()
 	TArray<AActor*> IgnoredActors;
