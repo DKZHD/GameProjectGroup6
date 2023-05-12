@@ -22,6 +22,7 @@ void UPauseScreen::NativeConstruct()
 	MainMenu->OnClicked.AddDynamic(this,&UPauseScreen::MenuButtonClicked);
 	OptionsButton->OnClicked.AddDynamic(this,&UPauseScreen::OptionsButtonClicked);
 	BardGameInstance=Cast<UBardGameInstance>(GetGameInstance());
+	CustomHUD=Cast<ACustomHUD>(UGameplayStatics::GetPlayerController(this,0)->GetHUD());
 }
 
 //When Resume is clicked
@@ -29,7 +30,6 @@ void UPauseScreen::ResumeButtonClicked()
 {
 	UGameplayStatics::PlaySound2D(this,ClickSound);
 	UGameplayStatics::SetGamePaused(this, false);
-	ACustomHUD* CustomHUD=Cast<ACustomHUD>(UGameplayStatics::GetPlayerController(this,0)->GetHUD());
 	UGameplayStatics::GetPlayerController(this,0)->SetShowMouseCursor(false);
 	UGameplayStatics::GetPlayerController(this,0)->SetInputMode(Game);
 	RemoveFromParent();
@@ -50,7 +50,6 @@ void UPauseScreen::MenuButtonClicked()
 void UPauseScreen::OptionsButtonClicked()
 {
 	UGameplayStatics::PlaySound2D(this,ClickSound);
-	ACustomHUD* CustomHUD=Cast<ACustomHUD>(UGameplayStatics::GetPlayerController(this,0)->GetHUD());
 	CustomHUD->SettingsScreen->VolumeSlider->SetValue(BardGameInstance->VolumeLevel);
 	RemoveFromParent();
 	CustomHUD->SettingsScreen->AddToViewport(0);

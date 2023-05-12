@@ -45,5 +45,7 @@ class GAMEPROJECTGROUP6_API UPauseScreen : public UUserWidget
 	//Other
 	UPROPERTY()
 	UBardGameInstance* BardGameInstance;
+	UPROPERTY()
+	ACustomHUD* CustomHUD;
 
 };

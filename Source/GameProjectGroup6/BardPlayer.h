@@ -13,6 +13,7 @@ class UDamageHandlingComponent;
 class UNiagaraSystem;
 class UInputAction;
 class UInputMappingContext;
+class ACustomHUD;
 
 UCLASS()
 class GAMEPROJECTGROUP6_API ABardPlayer : public ACharacter
@@ -132,6 +133,8 @@ public:
 	int WeaponNumber=1;
 	FHitResult Hit;
 	FCollisionQueryParams TraceHit;
+	UPROPERTY()
+	ACustomHUD* CustomHUD;
 	float TimeSpent;
 	
 	//Animations

@@ -29,7 +29,6 @@ void USettingsWidget::NativeConstruct()
 	HideHUD->OnCheckStateChanged.AddDynamic(this,&USettingsWidget::HideHUDFunction);
 	VolumeSlider->OnValueChanged.AddDynamic(this,&USettingsWidget::VolumeChanged);
 	Return->OnClicked.AddDynamic(this,&USettingsWidget::GoBack);
-
 	
 	VolumeSlider->SetValue(BardGameInstance->VolumeLevel);
 	VolumeAmount->SetText(FText::FromString(FString::FromInt(FMath::FloorToInt(BardGameInstance->VolumeLevel*100))));
@@ -83,7 +82,6 @@ void USettingsWidget::HideHUDFunction(bool bIsChecked)
 //Change window mode functionality
 void USettingsWidget::WindowModeFunction(FString SelectedItem, ESelectInfo::Type)
  {
- 	UserSettings=Cast<UGameUserSettings>(GEngine->GetGameUserSettings());
  	if(UserSettings)
  	{
  			if(SelectedItem=="Windowed")
@@ -114,14 +112,14 @@ void USettingsWidget::WindowModeFunction(FString SelectedItem, ESelectInfo::Type
 //Return button
 void USettingsWidget::GoBack()
 {
-	UBardGameInstance* GameInstance=Cast<UBardGameInstance>(GetGameInstance());
+	BardGameInstance=Cast<UBardGameInstance>(GetGameInstance());
 	if(CustomHUD->MenuWidget->OpenedFromMenu)
 	{
 		CustomHUD->MenuWidget->AddToViewport();
 		CustomHUD->MenuWidget->OpenedFromMenu=false;
 	}
 	
-	else if(GameInstance->HasSpawnedMainMenu)
+	else if(BardGameInstance->HasSpawnedMainMenu)
 	{
 		ABardPlayer* BardPlayer=Cast<ABardPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
 		if(BardPlayer)

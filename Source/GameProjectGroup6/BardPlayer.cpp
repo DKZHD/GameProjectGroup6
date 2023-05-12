@@ -54,7 +54,7 @@ ABardPlayer::ABardPlayer()
 void ABardPlayer::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	CustomHUD=Cast<ACustomHUD>(UGameplayStatics::GetPlayerController(this,0)->GetHUD());
 	AnimInstance=GetMesh()->GetAnimInstance();
 	CameraManager=UGameplayStatics::GetPlayerCameraManager(this,0);
 	DamageHandlingComponent->Health=5;
@@ -255,13 +255,13 @@ void ABardPlayer::CombatFunctionRelease()
 
 void ABardPlayer::Weaponswap()
 {
-	ACustomHUD* HUDref=Cast<ACustomHUD>(UGameplayStatics::GetPlayerController(this,0)->GetHUD());
+	
 	if(!IsDrumming)
 	{
 		if(!IsFluting)
 		{
 			WeaponNumber++;
-			UUI* UIref=Cast<UUI>(HUDref->UIWidget);
+			UUI* UIref=Cast<UUI>(CustomHUD->UIWidget);
 			UIref->ChangeUIPicture();
 		}	
 	}
@@ -271,7 +271,6 @@ void ABardPlayer::Weaponswap()
 
 void ABardPlayer::PauseFunction()
 {
-	const ACustomHUD* CustomHUD=Cast<ACustomHUD>(UGameplayStatics::GetPlayerController(this,0)->GetHUD());
 	CustomHUD->UIWidget->RemoveFromParent();
 	PauseScreenRef=CreateWidget<UUserWidget>(GetWorld(),PauseScreen);
 	PauseScreenRef->AddToViewport(0);
