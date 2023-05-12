@@ -16,7 +16,7 @@ AWeaponBase::AWeaponBase()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	FluteCollision=CreateDefaultSubobject<UBoxComponent>(TEXT("FLuteCollision"));
 	FluteCollision->SetupAttachment(Mesh);
-	FluteCollision->Deactivate();
+	FluteCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 // Called when the game starts or when spawned

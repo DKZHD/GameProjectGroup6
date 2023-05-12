@@ -263,8 +263,7 @@ void ABardPlayer::Weaponswap()
 			WeaponNumber++;
 			UUI* UIref=Cast<UUI>(HUDref->UIWidget);
 			UIref->ChangeUIPicture();
-		}
-			
+		}	
 	}
 	if (WeaponNumber > 3)
 			WeaponNumber = 1;
@@ -293,16 +292,17 @@ void ABardPlayer::PlayHitAnim(AActor* DamagedActor, float Damage, const class UD
 
 void ABardPlayer::AnimNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload)
 {
+	//FluteNotifies
 	if(NotifyName=="1st")
-	{
 		FluteRef->FluteCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		GEngine->AddOnScreenDebugMessage(-1,2.f,FColor::Blue,"1st");
-	}
 	if(NotifyName=="2nd")
-	{
 		FluteRef->FluteCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-		GEngine->AddOnScreenDebugMessage(-1,2.f,FColor::Blue,"2nd");
-	}
+	if(NotifyName=="Start")
+		FluteRef->FluteCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	if(NotifyName=="End")
+		FluteRef->FluteCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
+	//DrumNotifies
 	if(NotifyName=="Drum1")
 		CameraManager->StartCameraShake(BP_DrumShake,.5);
 	if(NotifyName=="Drum2")
