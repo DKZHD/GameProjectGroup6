@@ -9,6 +9,7 @@
 #include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"
 
+//Freeze game when added, also adds functionality to buttons
 void UPauseScreen::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -20,6 +21,7 @@ void UPauseScreen::NativeConstruct()
 	OptionsButton->OnClicked.AddDynamic(this,&UPauseScreen::OptionsButtonClicked);
 }
 
+//When Resume is clicked
 void UPauseScreen::ResumeButtonClicked()
 {
 	UGameplayStatics::SetGamePaused(this, false);
@@ -30,6 +32,7 @@ void UPauseScreen::ResumeButtonClicked()
 	CustomHUD->UIWidget->AddToViewport(0);
 }
 
+//When Main Menu is clicked
 void UPauseScreen::MenuButtonClicked()
 {
 	RemoveFromParent();
@@ -38,6 +41,7 @@ void UPauseScreen::MenuButtonClicked()
 	UGameplayStatics::OpenLevel(this,"MainMenuMap");
 }
 
+//When Options is pressed
 void UPauseScreen::OptionsButtonClicked()
 {
 	ACustomHUD* CustomHUD=Cast<ACustomHUD>(UGameplayStatics::GetPlayerController(this,0)->GetHUD());

@@ -13,6 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Runtime/Engine/Classes/GameFramework/GameUserSettings.h"
 
+//Add Functionality to button presses, and keep selected active
 void USettingsWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -36,11 +37,7 @@ void USettingsWidget::NativeConstruct()
 	}
 }
 
-void USettingsWidget::NativePreConstruct()
-{
-	Super::NativePreConstruct();
-}
-
+//VSync CheckBox
 void USettingsWidget::VSyncFunction(bool bIsChecked)
 {
 	if(bIsChecked)
@@ -62,12 +59,14 @@ void USettingsWidget::VSyncFunction(bool bIsChecked)
 	}
 }
 
+//Apply Settings Button
 void USettingsWidget::ApplyChangesFunction()
 {
 	UserSettings->ApplySettings(true);
 	UserSettings->SaveSettings();
 }
 
+//Change window mode functionality
 void USettingsWidget::WindowModeFunction(FString SelectedItem, ESelectInfo::Type)
  {
  	UserSettings=Cast<UGameUserSettings>(GEngine->GetGameUserSettings());
@@ -100,6 +99,7 @@ void USettingsWidget::WindowModeFunction(FString SelectedItem, ESelectInfo::Type
  	
  }
 
+//Return button
 void USettingsWidget::GoBack()
 {
 	UBardGameInstance* GameInstance=Cast<UBardGameInstance>(GetGameInstance());

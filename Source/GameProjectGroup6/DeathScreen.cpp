@@ -8,6 +8,7 @@
 #include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"
 
+//Called when Widget is created
 void UDeathScreen::NativeConstruct()
 {
 	APlayerController* PC=Cast<APlayerController>(UGameplayStatics::GetPlayerController(this,0));
@@ -18,6 +19,8 @@ void UDeathScreen::NativeConstruct()
 	Menu->OnClicked.AddDynamic(this, &UDeathScreen::MenuFunction);
 	Quit->OnClicked.AddDynamic(this, &UDeathScreen::QuitFunction);
 }
+
+//When Retry button is clicked
 void UDeathScreen::RetryFunction()
 {
 	APlayerController* PC=Cast<APlayerController>(UGameplayStatics::GetPlayerController(this,0));
@@ -27,6 +30,8 @@ void UDeathScreen::RetryFunction()
 	UWidgetLayoutLibrary::RemoveAllWidgets(GetWorld());
 	UGameplayStatics::OpenLevel(GetWorld(), "NewMap_lvl_1");
 }
+
+//When Main menu button is clicked
 void UDeathScreen::MenuFunction()
 {
 	UBardGameInstance* BardGameInstance=Cast<UBardGameInstance>(GetGameInstance());
@@ -34,6 +39,8 @@ void UDeathScreen::MenuFunction()
 	UGameplayStatics::OpenLevel(this,"MainMenuMap");
 	RemoveFromParent();
 }
+
+//When Quit button is clicked
 void UDeathScreen::QuitFunction()
 {
 	UKismetSystemLibrary::QuitGame(GetWorld(),UGameplayStatics::GetPlayerController(GetWorld(),0),EQuitPreference::Quit,false);

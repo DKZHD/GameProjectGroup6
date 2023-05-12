@@ -10,21 +10,26 @@
 /**
  * 
  */
+class UBlackboardComponent;
+
 UCLASS()
 class GAMEPROJECTGROUP6_API AEnemyAIController : public AAIController
 {
 	GENERATED_BODY()
 public:
 	AEnemyAIController();
-	virtual void Tick(float DeltaSeconds) override;
 	
-	UPROPERTY(EditAnywhere)
-		UBehaviorTree* BT;
+	virtual void Tick(float DeltaSeconds) override;
 
+	//Which Behaviour tree to use
 	UPROPERTY(EditAnywhere)
-		class UBlackboardComponent* BB;
+	UBehaviorTree* BT;
+
+	//Components for the blackboard
+	UPROPERTY()
+	UBlackboardComponent* BB;
 	UPROPERTY(EditAnywhere)
-	class UBlackboardData* BBD;
+	UBlackboardData* BBKey;
 	
 protected:
 	virtual void BeginPlay() override;

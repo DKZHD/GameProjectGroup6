@@ -9,17 +9,22 @@
 /**
  * 
  */
+class UButton;
+
 UCLASS()
 class GAMEPROJECTGROUP6_API UDeathScreen : public UUserWidget
 {
 	GENERATED_BODY()
+
+	//Buttons
 	UPROPERTY(EditAnywhere,meta=(BindWidget))
-	class UButton* Retry;
+	UButton* Retry;
 	UPROPERTY(EditAnywhere,meta=(BindWidget))
 	UButton* Menu;
 	UPROPERTY(EditAnywhere,meta=(BindWidget))
 	UButton* Quit;
 
+	//Button Functionality
 	virtual void NativeConstruct() override;
 	UFUNCTION()
 	void RetryFunction();
@@ -27,6 +32,8 @@ class GAMEPROJECTGROUP6_API UDeathScreen : public UUserWidget
 	void MenuFunction();
 	UFUNCTION()
 	void QuitFunction();
+	
+	//Input modes
 	FInputModeUIOnly UIOnly;
 	FInputModeGameOnly Game;
 };

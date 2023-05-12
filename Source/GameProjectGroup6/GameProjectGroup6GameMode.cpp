@@ -6,7 +6,7 @@
 
 AGameProjectGroup6GameMode::AGameProjectGroup6GameMode()
 {
-	// set default pawn class to our Blueprinted character
+	// set default hud class to the custom hud created
 	static ConstructorHelpers::FClassFinder<AHUD> HUDBase(TEXT("/Game/UI_Hud/BP_PlayerHUD"));
 	if(HUDBase.Class != NULL)
 	{

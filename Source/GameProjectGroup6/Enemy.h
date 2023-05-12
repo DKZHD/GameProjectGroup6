@@ -5,54 +5,26 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Enemy.generated.h"
+class ABardPlayer;
+class USphereComponent;
+class UDamageHandlingComponent;
+class UHealthBardComponent;
+class AItems;
 
 UCLASS()
 class GAMEPROJECTGROUP6_API AEnemy : public ACharacter
 {
 	GENERATED_BODY()
 
-public:
-	// Sets default values for this character's properties
-	AEnemy();
-	
-
-	//Bool if enemy is attacking
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Enemy")
-		bool CanAttack;
-
-	//Bool if the enemy is stunned 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Enemy")
-		bool IsStunned;
-
-	//Droprate of the item
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-		int Droprate;
-
-	//Refference to the item
-	UPROPERTY()
-		class AItems* Item;
-
-	//Item to spawn
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-		TSubclassOf<AItems> ItemsToSpawn;
-
-	//Bard Player
-	UPROPERTY()
-	class ABardPlayer* Bard;
-
-	//Collider
-	UPROPERTY(EditAnywhere)
-	class USphereComponent* Collider;
-
-	
-
-	FTimerHandle Handle;
-	FTimerHandle GravityHandle;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
+	
+	// Sets default values for this character's properties
+	AEnemy();
+	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -61,35 +33,69 @@ public:
 
 	// Changing movement mode to walking
     UFUNCTION()
-        void ChangeMovementMode();
+	void ChangeMovementMode();
 
 	// When the enemy is hit by radial damage
 	UFUNCTION()
-		void OnRadialDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, FVector Origin, FHitResult HitInfo, class AController* InstigatedBy, AActor* DamageCauser);
+	void OnRadialDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, FVector Origin, FHitResult HitInfo, class AController* InstigatedBy, AActor* DamageCauser);
 
 	// Function to reset after getting stunned
 	UFUNCTION()
-		void ResetStun();
+	void ResetStun();
 
 	// Function to die
 	UFUNCTION()
-		void Die();
+	void Die();
+
 	
 	TSubclassOf<UDamageType> BaseDamage;
+	
+	//Bool if enemy is attacking
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Enemy")
+	bool CanAttack;
+
+	//Bool if the enemy is stunned 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Enemy")
+	bool IsStunned;
+
+	//Droprate of the item
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
+	int Droprate;
+
+	//Refference to the item
+	UPROPERTY()
+	AItems* Item;
+
+	//Item to spawn
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	TSubclassOf<AItems> ItemsToSpawn;
+
+	//Bard Player
+	UPROPERTY()
+	ABardPlayer* Bard;
+
+	//Collider
+	UPROPERTY(EditAnywhere)
+	USphereComponent* Collider;
+
+	
+	//Handles
+	FTimerHandle Handle;
+	FTimerHandle GravityHandle;
 
 private:
 
 	//Component to handle damage
 	UPROPERTY(VisibleAnywhere)
-		class UDamageHandlingComponent* DamageHandling;
+	UDamageHandlingComponent* DamageHandling;
 
 	// Component to handle the healthbar
 	UPROPERTY(VisibleAnywhere)
-		class UHealthBardComponent* HealthBarWidget;
+	UHealthBardComponent* HealthBarWidget;
 
 	//Checks for overlap
 	UFUNCTION()
-    	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+		void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
     	                    UPrimitiveComponent* OtherComponent,
     	                    int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 

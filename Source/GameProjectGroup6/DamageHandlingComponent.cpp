@@ -27,7 +27,7 @@ void UDamageHandlingComponent::BeginPlay()
 	}
 	Health = DefaultHealth;
 }
-
+//When Owner takes any amount how damage
 void UDamageHandlingComponent::TakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
 	Health -= Damage;
@@ -36,7 +36,7 @@ void UDamageHandlingComponent::TakeDamage(AActor* DamagedActor, float Damage, co
 		IsDead = true;
 	}
 }
-
+//For Enemy Health Bar
 float UDamageHandlingComponent::GetHealthPercent()
 {
 	return Health / DefaultHealth;

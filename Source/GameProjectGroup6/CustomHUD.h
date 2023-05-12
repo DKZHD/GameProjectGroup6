@@ -10,38 +10,49 @@
 /**
  * 
  */
+class USettingsWidget;
+class UMainMenu;
+class UUserWidget;
+class USettingsWidget;
+class UBardGameInstance;
+
 UCLASS()
 class GAMEPROJECTGROUP6_API ACustomHUD : public AHUD
 {
 	GENERATED_BODY()
-public:
-	ACustomHUD();
+	
 protected:
+	
 	virtual void BeginPlay() override;
+	
 public:
+	
+	//Widgets
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<UUserWidget> MainMenu_BP;
+	TSubclassOf<UUserWidget> MainMenu_BP;
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<UUserWidget> UI_BP;
+	TSubclassOf<UUserWidget> UI_BP;
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<class USettingsWidget> Settings_BP;
+	TSubclassOf<USettingsWidget> Settings_BP;
 	UPROPERTY()
-	class UMainMenu* MenuWidget;
+	UMainMenu* MenuWidget;
 	UPROPERTY()
-	class UUserWidget* UIWidget;
+	UUserWidget* UIWidget;
 	UPROPERTY()
-	class USettingsWidget* SettingsScreen;
+	USettingsWidget* SettingsScreen;
+	
+	//GameInstance
 	UPROPERTY()
-	class UBardGameInstance* BardGameInstance;
+	UBardGameInstance* BardGameInstance;
+	
+	//Save Screen Resolution
 	UPROPERTY()
 	FString OptionSelected;
 	
-	
+	//InputModes
 	FInputModeGameOnly GameOnly;
 	FInputModeUIOnly UIOnly;
-	UFUNCTION()
-	void ClearWidgets();
 
-	FTimerHandle Handle;
+	
 
 };

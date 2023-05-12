@@ -13,12 +13,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "Runtime/Engine/Classes/GameFramework/GameUserSettings.h"
 
-
-ACustomHUD::ACustomHUD()
-{
-	
-}
-
 void ACustomHUD::BeginPlay()
 {
 	Super::BeginPlay();
@@ -29,8 +23,8 @@ void ACustomHUD::BeginPlay()
 	
 	OptionSelected=SettingsScreen->WindowSettings->GetSelectedOption();
 	SettingsScreen->WindowModeFunction(SettingsScreen->WindowSettings->GetSelectedOption(),ESelectInfo::Direct);
-	
 	BardGameInstance=Cast<UBardGameInstance>(GetGameInstance());
+	
 	if(!BardGameInstance->HasSpawnedMainMenu)
 	{
 		if(MenuWidget)
@@ -42,7 +36,7 @@ void ACustomHUD::BeginPlay()
 	}
 	else
 	{
-		ClearWidgets();
+		UWidgetLayoutLibrary::RemoveAllWidgets(this);
 		if(UIWidget)
 		{
 			UGameplayStatics::GetPlayerController(GetWorld(),0)->SetInputMode(GameOnly);
@@ -53,10 +47,5 @@ void ACustomHUD::BeginPlay()
 		}
 	}
 
-}
-
-void ACustomHUD::ClearWidgets()
-{
-	UWidgetLayoutLibrary::RemoveAllWidgets(this);
 }
 

@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "EnemyHealthBar.generated.h"
 
+class UProgressBar;
 
 UCLASS()
 class GAMEPROJECTGROUP6_API UEnemyHealthBar : public UUserWidget
@@ -15,6 +16,6 @@ class GAMEPROJECTGROUP6_API UEnemyHealthBar : public UUserWidget
 public:
 	//
 	UPROPERTY(meta = (BindWidget))
-		class UProgressBar* HealthBar;
+		UProgressBar* HealthBar;
 	
 };

@@ -6,6 +6,14 @@
 #include "GameFramework/Character.h"
 #include "BardPlayer.generated.h"
 
+class USpringArmComponent;
+class UCameraComponent;
+class AWeaponBase;
+class UDamageHandlingComponent;
+class UNiagaraSystem;
+class UInputAction;
+class UInputMappingContext;
+
 UCLASS()
 class GAMEPROJECTGROUP6_API ABardPlayer : public ACharacter
 {
@@ -25,26 +33,40 @@ public:
 
 	//Components
 	UPROPERTY(EditAnywhere)
-	class USpringArmComponent* SpringArm;
+	USpringArmComponent* SpringArm;
 	UPROPERTY(EditAnywhere)
-	class UCameraComponent* Camera;
+	UCameraComponent* Camera;
 
-	//Weapons
+	//Weapon Blueprints
 	UPROPERTY(EditAnywhere, Category="Flute")
-	TSubclassOf<class AWeaponBase> Flute;
+	TSubclassOf<AWeaponBase> Flute;
 	UPROPERTY(EditAnywhere, Category="Drum")
 	TSubclassOf<AWeaponBase> Drum;
 	UPROPERTY(EditAnywhere, Category="Drum")
 	TSubclassOf<AActor> DrumStick_BP;
 	UPROPERTY(EditAnywhere, Category="Harp")
 	TSubclassOf<AWeaponBase> Harp;
+
+	//Additional Components 
 	UPROPERTY(EditAnywhere)
 	USceneComponent* DrumSpawn;
 	UPROPERTY(EditAnywhere)
-	class UDamageHandlingComponent* DamageHandlingComponent;
+	UDamageHandlingComponent* DamageHandlingComponent;
+	
+	//Spawned Components
 	UPROPERTY()
 	AWeaponBase* FluteRef;
-
+	UPROPERTY()
+	AActor* SpawnedHarp=nullptr;
+	UPROPERTY()
+	AActor* SpawnedFlute = nullptr;
+	UPROPERTY()
+	AActor* SpawnedDrum = nullptr;
+	UPROPERTY()
+	AActor* DrumStick1 = nullptr;
+	UPROPERTY()
+	AActor* DrumStick2 = nullptr;
+	
 	//Handles
 	UPROPERTY()
 	FTimerHandle Handle;
@@ -53,15 +75,18 @@ public:
 
 	//Systems
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Flute")
-		class UNiagaraSystem* FluteSlash;
+		UNiagaraSystem* FluteSlash;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Drum")
-		class UNiagaraSystem* DrumAOE;
+		UNiagaraSystem* DrumAOE;
 
-	//Input
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+	//Inputs
 	UPROPERTY(EditAnywhere, Category="Input")
-		class UInputMappingContext* IMC;
+		UInputMappingContext* IMC;
 	UPROPERTY(EditAnywhere, Category="Input")
-		class UInputAction* Move;
+		UInputAction* Move;
 	UPROPERTY(EditAnywhere, Category="Input")
 		UInputAction* CombatAction;
 	UPROPERTY(EditAnywhere, Category="Input")
@@ -81,22 +106,13 @@ public:
 	UFUNCTION()
 	void CombatFunctionRelease();
 	UFUNCTION()
-	void DoDamage(AActor* DamagedActor, float BaseDamage, AController* EventInstigator, AActor* DamageCauser, TSubclassOf<class UDamageType> DamageTypeClass);
-	UFUNCTION()
 	void ActivateMovement();
-	UFUNCTION()
-	void PlayHitAnim(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
-	UFUNCTION()
-	void WhenCompleted(UAnimMontage* Montage, bool bInterrupted);
 	UFUNCTION()
 	void SpawnDrumAOE();
 	UFUNCTION()
 	void PauseFunction();
-	UFUNCTION()
-	void AnimNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload);
-
+	
 	//Variables
-	int WeaponNumber=1;
 	UPROPERTY()
 	FVector Position;
 	UPROPERTY()
@@ -112,17 +128,41 @@ public:
 	UPROPERTY()
 	bool IsFluting;
 	UPROPERTY()
-	UAnimInstance* AnimInstance;
+	bool IsHarping;
+	int WeaponNumber=1;
 	FHitResult Hit;
 	FCollisionQueryParams TraceHit;
-	float LerpAlpha;
 	float TimeSpent;
+	
+	//Animations
+	UPROPERTY()
+	UAnimInstance* AnimInstance;
+	UPROPERTY(EditAnywhere, Category = "Custom Animations")
+	UAnimMontage* DrumAttack;
+	UPROPERTY(EditAnywhere, Category = "Custom Animations")
+	UAnimMontage* FluteAttack;
+	UPROPERTY(EditAnywhere, Category = "Custom Animations")
+	UAnimMontage* HarpAttack;
+	UPROPERTY(EditAnywhere, Category = "Custom Animations")
+	UAnimMontage* HitAnim;
+
+	//Animation Functions
+	UFUNCTION()
+	void AnimNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload);
+	UFUNCTION()
+	void WhenCompleted(UAnimMontage* Montage, bool bInterrupted);
+	UFUNCTION()
+	void PlayHitAnim(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+
+	//Widgets
 	UPROPERTY(EditAnywhere, Category="User Widgets")
 	TSubclassOf<UUserWidget> PauseScreen;
 	UPROPERTY(EditAnywhere, Category="User Widgets")
 	TSubclassOf<UUserWidget> DeathScreen;
 	UPROPERTY()
 	UUserWidget* PauseScreenRef;
+
+	//Miscellaneous
 	UPROPERTY(EditAnywhere, Category="Damage Type")
 	TSubclassOf<UDamageType> BaseDamageType;
 	UPROPERTY()
@@ -156,27 +196,5 @@ public:
 	UPROPERTY()
 	TArray<AActor*> IgnoredActors;
 
-	//Spawned Components
-	UPROPERTY()
-	AActor* SpawnedFlute = nullptr;
-	UPROPERTY()
-	AActor* SpawnedDrum = nullptr;
-	UPROPERTY()
-	AActor* DrumStick1 = nullptr;
-	UPROPERTY()
-	AActor* DrumStick2 = nullptr;
-
-	//AnimMontages
-	UPROPERTY(EditAnywhere, Category = "Custom Animations")
-		UAnimMontage* DrumAttack;
-	UPROPERTY(EditAnywhere, Category = "Custom Animations")
-		UAnimMontage* FluteAttack;
-	UPROPERTY(EditAnywhere, Category = "Custom Animations")
-		UAnimMontage* HarpAttack;
-	UPROPERTY(EditAnywhere, Category = "Custom Animations")
-		UAnimMontage* HitAnim;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 };

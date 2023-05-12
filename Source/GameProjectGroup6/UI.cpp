@@ -14,15 +14,13 @@ void UUI::NativeConstruct()
 
 float UUI::GetHealthPercent()
 {
-if(Bard)
-{
-	float Current = Bard->DamageHandlingComponent->Health;
-	float Default = Bard->DamageHandlingComponent->DefaultHealth;                                                          	
-    FMath::Clamp(Health = Current / Default,0,1);
-}
-
+	if(Bard)
+	{
+		float Current = Bard->DamageHandlingComponent->Health;
+		float Default = Bard->DamageHandlingComponent->DefaultHealth;                                                          	
+		FMath::Clamp(Health = Current / Default,0,1);
+	}
 	
-
 	if (Health >= 1)
 	{
 		return 1.f;

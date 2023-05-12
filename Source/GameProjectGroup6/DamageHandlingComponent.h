@@ -12,15 +12,16 @@ class GAMEPROJECTGROUP6_API UDamageHandlingComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
-	// Sets default values for this component's properties
-	UDamageHandlingComponent();
-
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:
+
+	// Sets default values for this component's properties
+	UDamageHandlingComponent();
+
+	//Variables
 	UPROPERTY(BlueprintReadWrite, Category = "Health")
 	float Health;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
@@ -28,9 +29,9 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool IsDead;
 
+	//Functions
 	UFUNCTION()
 	void TakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
-
 	UFUNCTION()
 	float GetHealthPercent();
 };

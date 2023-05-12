@@ -6,28 +6,34 @@
 #include "Blueprint/UserWidget.h"
 #include "PauseScreen.generated.h"
 
-
 /**
  * 
  */
+class UButton;
+
 UCLASS()
 class GAMEPROJECTGROUP6_API UPauseScreen : public UUserWidget
 {
 	GENERATED_BODY()
-	virtual void NativeConstruct() override;
+	
+	//Buttons
 	UPROPERTY(EditAnywhere,meta=(BindWidget))
-	class UButton* ResumeGame;
+	UButton* ResumeGame;
 	UPROPERTY(EditAnywhere,meta=(BindWidget))
 	UButton* MainMenu;
 	UPROPERTY(EditAnywhere,meta=(BindWidget))
 	UButton* OptionsButton;
 
+	//Functions
+	virtual void NativeConstruct() override;
 	UFUNCTION()
 	void ResumeButtonClicked();
 	UFUNCTION()
 	void MenuButtonClicked();
 	UFUNCTION()
 	void OptionsButtonClicked();
+
+	//Input Mode
 	FInputModeGameOnly Game;
 	FInputModeUIOnly UI;
 	

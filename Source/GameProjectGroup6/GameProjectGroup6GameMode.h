@@ -6,15 +6,15 @@
 #include "GameFramework/GameModeBase.h"
 #include "GameProjectGroup6GameMode.generated.h"
 
+class ACustomHUD;
 UCLASS(minimalapi)
 class AGameProjectGroup6GameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
 public:
+	//Sets Default values
 	AGameProjectGroup6GameMode();
-	UPROPERTY(EditAnywhere)
-		TSubclassOf<class ACustomHUD> CustomHUD_BP;
 };
 
 

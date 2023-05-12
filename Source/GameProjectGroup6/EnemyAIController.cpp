@@ -14,9 +14,12 @@ AEnemyAIController::AEnemyAIController()
 void AEnemyAIController::BeginPlay()
 {
 	Super::BeginPlay();
-	ABardPlayer* Bard = Cast<ABardPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	
 	RunBehaviorTree(BT);
-	UseBlackboard(BBD, BB);
+	UseBlackboard(BBKey, BB);
+	
+	//Make Ai know who the player is
+	ABardPlayer* Bard = Cast<ABardPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	BB->SetValueAsObject(FName("Player"), Bard);
 }
 

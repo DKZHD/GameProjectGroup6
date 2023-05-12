@@ -9,25 +9,32 @@
 /**
  * 
  */
+class UButton;
+class ACustomHUD;
+
 UCLASS()
 class GAMEPROJECTGROUP6_API UMainMenu : public UUserWidget
 {
 	GENERATED_BODY()
 public:
+	
+	//Widget Components
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-		class UButton* StartGame;
+	UButton* StartGame;
 	UPROPERTY(EditAnywhere,meta=(BindWidget))
 	UButton* ExitGame;
 	UPROPERTY(EditAnywhere,meta=(BindWidget))
 	UButton* Settings;
+
+	//Get HUD
 	UPROPERTY()
-	class ACustomHUD* HUD;
+	ACustomHUD* HUD;
 
 	UPROPERTY()
 	bool OpenedFromMenu=false;
 	
+	//Functions 
 	virtual void NativeConstruct() override;
-
 	UFUNCTION()
 		void StartGameButtonClicked();
 	UFUNCTION()

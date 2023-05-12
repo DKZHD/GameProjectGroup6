@@ -6,41 +6,45 @@
 #include "GameFramework/Actor.h"
 #include "Items.generated.h"
 
+class USkeletalMeshComponent;
+class USphereComponent;
+class UDamageHandlingComponent;
+class ABardPlayer;
+
 UCLASS()
 class GAMEPROJECTGROUP6_API AItems : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
-	// Sets default values for this actor's properties
-	AItems();
-
-
-	//Mesh Component
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-		class USkeletalMeshComponent* StaticMesh;
-
-	//Collusion Component
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-		class USphereComponent* Collider;
-
-	//Damage Handling Component
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-		class UDamageHandlingComponent* DamageHandling;
-
-	//Bard Player
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-		class ABardPlayer* Bard;
-
-
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
+	
+	// Sets default values for this actor's properties
+	AItems();
+	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	
+	//Mesh Component
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	USkeletalMeshComponent* StaticMesh;
+
+	//Collusion Component
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	USphereComponent* Collider;
+
+	//Damage Handling Component
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	UDamageHandlingComponent* DamageHandling;
+
+	//Bard Player
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	ABardPlayer* Bard;
+
 
 	//On overlap function
 	UFUNCTION()

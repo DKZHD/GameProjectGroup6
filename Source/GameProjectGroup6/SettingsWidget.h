@@ -6,35 +6,45 @@
 #include "Blueprint/UserWidget.h"
 #include "SettingsWidget.generated.h"
 
-
-
 /**
  * 
  */
+class UComboBoxString;
+class UCheckBox;
+class UButton;
+class UBardGameInstance;
+class ACustomHUD;
+
 UCLASS()
 class GAMEPROJECTGROUP6_API USettingsWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
-	virtual void NativePreConstruct() override;
+
 public:
 	virtual void NativeConstruct() override;
 	//Widgets
 	UPROPERTY(meta=(BindWidget))
-	class UComboBoxString* WindowSettings;
+	UComboBoxString* WindowSettings;
 	UPROPERTY(meta=(BindWidget))
-	class UCheckBox* toggleVSYNC;
+	UCheckBox* toggleVSYNC;
 	UPROPERTY(meta=(BindWidget))
-	class UButton* ApplyActiveChanges;
+	UButton* ApplyActiveChanges;
 	UPROPERTY(meta=(BindWidget))
-	class UButton* Return;
-	UPROPERTY()
-	class UBardGameInstance* BardGameInstance;
-	UPROPERTY()
-	class ACustomHUD* CustomHUD;
+	UButton* Return;
 
+	//Get Game Instance
+	UPROPERTY()
+	UBardGameInstance* BardGameInstance;
+
+	//Get HUD
+	UPROPERTY()
+	ACustomHUD* CustomHUD;
+
+	//Get Integrated User Settings
 	UPROPERTY()
 	UGameUserSettings* UserSettings;
+
+	//Functionality
 	UFUNCTION()
 	void VSyncFunction(bool bIsChecked);
 	UFUNCTION()

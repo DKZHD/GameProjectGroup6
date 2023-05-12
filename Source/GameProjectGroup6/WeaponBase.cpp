@@ -33,6 +33,8 @@ void AWeaponBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
+
+// When flute is overlapping
 void AWeaponBase::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if(OtherActor->IsA<AEnemy>())
@@ -43,11 +45,6 @@ void AWeaponBase::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 			UGameplayStatics::ApplyDamage(OtherActor,.5,UGameplayStatics::GetPlayerController(GetWorld(),0),this,BaseDamage);
 			GEngine->AddOnScreenDebugMessage(-1,2.f,FColor::Magenta,"It weeee Hit!");
 		}
-		else
-		{
-			
-		}
-		
 	}
 }
 
