@@ -15,6 +15,7 @@ class UMainMenu;
 class UUserWidget;
 class USettingsWidget;
 class UBardGameInstance;
+class UUI;
 
 UCLASS()
 class GAMEPROJECTGROUP6_API ACustomHUD : public AHUD
@@ -37,7 +38,7 @@ public:
 	UPROPERTY()
 	UMainMenu* MenuWidget;
 	UPROPERTY()
-	UUserWidget* UIWidget;
+	UUI* UIWidget;
 	UPROPERTY()
 	USettingsWidget* SettingsScreen;
 	

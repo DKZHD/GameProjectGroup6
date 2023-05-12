@@ -14,6 +14,8 @@ class UCheckBox;
 class UButton;
 class UBardGameInstance;
 class ACustomHUD;
+class USlider;
+class UTextBlock;
 
 UCLASS()
 class GAMEPROJECTGROUP6_API USettingsWidget : public UUserWidget
@@ -26,11 +28,15 @@ public:
 	UPROPERTY(meta=(BindWidget))
 	UComboBoxString* WindowSettings;
 	UPROPERTY(meta=(BindWidget))
-	UCheckBox* toggleVSYNC;
+	UCheckBox* VsyncCheckBox;
 	UPROPERTY(meta=(BindWidget))
-	UButton* ApplyActiveChanges;
+	UCheckBox* HideHUD;
 	UPROPERTY(meta=(BindWidget))
 	UButton* Return;
+	UPROPERTY(meta=(BindWidget))
+	USlider* VolumeSlider;
+	UPROPERTY(meta=(BindWidget))
+	UTextBlock* VolumeAmount;
 
 	//Get Game Instance
 	UPROPERTY()
@@ -44,15 +50,25 @@ public:
 	UPROPERTY()
 	UGameUserSettings* UserSettings;
 
+	//SoundComponents
+	UPROPERTY(EditAnywhere)
+	USoundMix* SoundMix;
+	UPROPERTY(EditAnywhere)
+	USoundClass* Master;
+	float CurrentVolume;
+	
+
 	//Functionality
 	UFUNCTION()
 	void VSyncFunction(bool bIsChecked);
 	UFUNCTION()
-	void ApplyChangesFunction();
+	void HideHUDFunction(bool bIsChecked);
 	UFUNCTION()
 	void WindowModeFunction(FString SelectedItem, ESelectInfo::Type SelectionType);
 	UFUNCTION()
 	void GoBack();
+	UFUNCTION()
+	void VolumeChanged(float value);
 	
 	
 };

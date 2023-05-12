@@ -10,8 +10,11 @@
 #include "Components/Button.h"
 #include "Components/CheckBox.h"
 #include "Components/ComboBoxString.h"
+#include "Components/Slider.h"
+#include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
 #include "Runtime/Engine/Classes/GameFramework/GameUserSettings.h"
+
 
 //Add Functionality to button presses, and keep selected active
 void USettingsWidget::NativeConstruct()
@@ -22,11 +25,16 @@ void USettingsWidget::NativeConstruct()
 	CustomHUD=Cast<ACustomHUD>(UGameplayStatics::GetPlayerController(this,0)->GetHUD());
 	
 	WindowSettings->OnSelectionChanged.AddDynamic(this,&USettingsWidget::WindowModeFunction);
-	toggleVSYNC->OnCheckStateChanged.AddDynamic(this,&USettingsWidget::VSyncFunction);
-	ApplyActiveChanges->OnClicked.AddDynamic(this,&USettingsWidget::ApplyChangesFunction);
+	VsyncCheckBox->OnCheckStateChanged.AddDynamic(this,&USettingsWidget::VSyncFunction);
+	HideHUD->OnCheckStateChanged.AddDynamic(this,&USettingsWidget::HideHUDFunction);
+	VolumeSlider->OnValueChanged.AddDynamic(this,&USettingsWidget::VolumeChanged);
 	Return->OnClicked.AddDynamic(this,&USettingsWidget::GoBack);
+
 	
-	toggleVSYNC->SetIsChecked(BardGameInstance->CheckedBox);
+	VolumeSlider->SetValue(BardGameInstance->VolumeLevel);
+	VolumeAmount->SetText(FText::FromString(FString::FromInt(FMath::FloorToInt(BardGameInstance->VolumeLevel*100))));
+	VsyncCheckBox->SetIsChecked(BardGameInstance->VSyncBox);
+	HideHUD->SetIsChecked(BardGameInstance->HideHUDGameInstance);
 	WindowSettings->SetSelectedOption(BardGameInstance->WindowState);
 	
 	if(!WindowSettings)
@@ -43,27 +51,33 @@ void USettingsWidget::VSyncFunction(bool bIsChecked)
 	if(bIsChecked)
 	{
 		UserSettings->SetVSyncEnabled(true);
+		UserSettings->ApplySettings(true);
 		UserSettings->SaveSettings();
-		BardGameInstance->CheckedBox=true;
-		UserSettings->ApplySettings(false);
-		GEngine->AddOnScreenDebugMessage(-1,2.f,FColor::Red,"Checked");
-		
 	}
 	else
 	{
 		UserSettings->SetVSyncEnabled(false);
-		UserSettings->ApplySettings(false);
-		BardGameInstance->CheckedBox=false;
-		GEngine->AddOnScreenDebugMessage(-1,2.f,FColor::Red,"Unchecked");
+		UserSettings->ApplySettings(true);
 		UserSettings->SaveSettings();
 	}
+	BardGameInstance->VSyncBox=VsyncCheckBox->IsChecked();
 }
 
-//Apply Settings Button
-void USettingsWidget::ApplyChangesFunction()
+void USettingsWidget::HideHUDFunction(bool bIsChecked)
 {
-	UserSettings->ApplySettings(true);
-	UserSettings->SaveSettings();
+	if(bIsChecked)
+	{
+		BardGameInstance->HideHUDGameInstance=true;
+		UserSettings->ApplySettings(true);
+		UserSettings->SaveSettings();
+	}
+	if(!bIsChecked)
+	{
+		BardGameInstance->HideHUDGameInstance=false;
+		UserSettings->ApplySettings(true);
+		UserSettings->SaveSettings();
+	}
+		
 }
 
 //Change window mode functionality
@@ -73,30 +87,28 @@ void USettingsWidget::WindowModeFunction(FString SelectedItem, ESelectInfo::Type
  	if(UserSettings)
  	{
  			if(SelectedItem=="Windowed")
-         	{
- 				GEngine->AddOnScreenDebugMessage(-1,2.f,FColor::Red,"Windowed");
-         		UserSettings->SetFullscreenMode(EWindowMode::Windowed);
- 				UserSettings->ApplySettings(false);
+ 			{
+ 				UserSettings->SetFullscreenMode(EWindowMode::Windowed);
  				BardGameInstance->WindowState="Windowed";
+ 				UserSettings->ApplySettings(true);
  				UserSettings->SaveSettings();
-         	}
+ 			}
          	if(SelectedItem=="Borderless Windowed")
          	{
-         		GEngine->AddOnScreenDebugMessage(-1,2.f,FColor::Red,"Borderless");
          		UserSettings->SetFullscreenMode(EWindowMode::WindowedFullscreen);
-         		UserSettings->ApplySettings(false);
          		BardGameInstance->WindowState="Borderless Windowed";
+         		UserSettings->ApplySettings(true);
          		UserSettings->SaveSettings();
          	}
          	if(SelectedItem=="Fullscreen")
          	{
          		UserSettings->SetFullscreenMode(EWindowMode::Fullscreen);
-         		UserSettings->ApplySettings(false);
          		BardGameInstance->WindowState="Fullscreen";
+         		UserSettings->ApplySettings(true);
          		UserSettings->SaveSettings();
          	}
+ 		
  	}
- 	
  }
 
 //Return button
@@ -111,9 +123,19 @@ void USettingsWidget::GoBack()
 	
 	else if(GameInstance->HasSpawnedMainMenu)
 	{
-		ABardPlayer* BardPlayer=Cast<ABardPlayer>(UGameplayStatics::GetPlayerCharacter(this,0));
+		ABardPlayer* BardPlayer=Cast<ABardPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
+		if(BardPlayer)
 		BardPlayer->PauseScreenRef->AddToViewport(0);
 	}
-	RemoveFromParent();
+	if(this)
+	this->RemoveFromParent();
+}
+//Volume Slider
+void USettingsWidget::VolumeChanged(float value)
+{
+	UGameplayStatics::SetSoundMixClassOverride(GetWorld(),SoundMix,Master,value);
+	UGameplayStatics::PushSoundMixModifier(GetWorld(),SoundMix);
+	BardGameInstance->VolumeLevel=value;
+	VolumeAmount->SetText(FText::FromString(FString::FromInt(FMath::FloorToInt(value*100))));
 }
 

@@ -14,6 +14,7 @@
 #include "WeaponBase.h"
 #include "NiagaraFunctionLibrary.h"
 #include "DrawDebugHelpers.h"
+#include "UI.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -254,13 +255,19 @@ void ABardPlayer::CombatFunctionRelease()
 
 void ABardPlayer::Weaponswap()
 {
+	ACustomHUD* HUDref=Cast<ACustomHUD>(UGameplayStatics::GetPlayerController(this,0)->GetHUD());
 	if(!IsDrumming)
-{
-	if(!IsFluting)
-	WeaponNumber++;
-}
+	{
+		if(!IsFluting)
+		{
+			WeaponNumber++;
+			UUI* UIref=Cast<UUI>(HUDref->UIWidget);
+			UIref->ChangeUIPicture();
+		}
+			
+	}
 	if (WeaponNumber > 3)
-    		WeaponNumber = 1;
+			WeaponNumber = 1;
 }
 
 void ABardPlayer::PauseFunction()

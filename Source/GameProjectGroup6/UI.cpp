@@ -5,13 +5,13 @@
 
 #include "BardPlayer.h"
 #include "DamageHandlingComponent.h"
+#include "Components/Image.h"
 #include "Kismet/GameplayStatics.h"
 
 void UUI::NativeConstruct()
 {
 	Bard = Cast<ABardPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
 }
-
 float UUI::GetHealthPercent()
 {
 	if(Bard)
@@ -48,5 +48,28 @@ float UUI::GetHealthPercent()
 	}
 	return 0;
 
+}
+
+void UUI::ChangeUIPicture()
+{
+	if(Bard->WeaponNumber>=1)
+	{
+		FluteImage->SetVisibility(ESlateVisibility::Visible);
+		DrumImage->SetVisibility(ESlateVisibility::Hidden);
+		HarpImage->SetVisibility(ESlateVisibility::Hidden);
+	}
+	if(Bard->WeaponNumber==2)
+	{
+		FluteImage->SetVisibility(ESlateVisibility::Hidden);
+		DrumImage->SetVisibility(ESlateVisibility::Visible);
+		HarpImage->SetVisibility(ESlateVisibility::Hidden);
+	}
+	if(Bard->WeaponNumber==3)
+	{
+		FluteImage->SetVisibility(ESlateVisibility::Hidden);
+		DrumImage->SetVisibility(ESlateVisibility::Hidden);
+		HarpImage->SetVisibility(ESlateVisibility::Visible);
+	}
+		
 }
 

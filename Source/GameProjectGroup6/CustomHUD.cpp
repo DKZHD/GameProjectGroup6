@@ -10,6 +10,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/ComboBoxString.h"
+#include "Components/Slider.h"
 #include "Kismet/GameplayStatics.h"
 #include "Runtime/Engine/Classes/GameFramework/GameUserSettings.h"
 
@@ -17,7 +18,7 @@ void ACustomHUD::BeginPlay()
 {
 	Super::BeginPlay();
 	MenuWidget=CreateWidget<UMainMenu>(GetWorld(), MainMenu_BP);
-	UIWidget=CreateWidget<UUserWidget>(GetWorld(), UI_BP);
+	UIWidget=CreateWidget<UUI>(GetWorld(), UI_BP);
 	SettingsScreen=CreateWidget<USettingsWidget>(GetWorld(), Settings_BP);
 	UGameUserSettings* UserSettings=Cast<UGameUserSettings>(GEngine->GetGameUserSettings());
 	
@@ -43,6 +44,7 @@ void ACustomHUD::BeginPlay()
 			UGameplayStatics::GetPlayerController(GetWorld(),0)->SetShowMouseCursor(false);
 			UGameplayStatics::SetGamePaused(this, false);
 			UGameplayStatics::GetPlayerCameraManager(this,0)->StartCameraFade(1,0,3,FLinearColor::Black);
+			if(!BardGameInstance->HideHUDGameInstance)
 			UIWidget->AddToViewport(0);
 		}
 	}

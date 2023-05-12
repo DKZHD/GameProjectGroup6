@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "UI.generated.h"
 
+class UImage;
 /**
  * 
  */
@@ -23,7 +24,12 @@ class GAMEPROJECTGROUP6_API UUI : public UUserWidget
 	// Widgets
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UProgressBar* HP_Bar;
-	
+	UPROPERTY(EditAnywhere,meta=(BindWidget))
+	UImage* FluteImage;
+	UPROPERTY(EditAnywhere,meta=(BindWidget))
+	UImage* DrumImage;
+	UPROPERTY(EditAnywhere,meta=(BindWidget))
+	UImage* HarpImage;
 	
 	// Reference to player 
 	UPROPERTY(EditAnywhere)
@@ -36,4 +42,7 @@ class GAMEPROJECTGROUP6_API UUI : public UUserWidget
 	// Function to adjust Health bar with player's current health
 	UFUNCTION(BlueprintPure)
 		float GetHealthPercent();
+public:
+	UFUNCTION()
+	void ChangeUIPicture();
 };

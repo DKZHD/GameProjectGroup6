@@ -21,10 +21,12 @@ public:
 	
 	UPROPERTY()
 	bool HasSpawnedMainMenu=false;
-	
 	UPROPERTY()
-	bool CheckedBox=false;
-	
+	bool VSyncBox=false;
+	UPROPERTY()
+	bool HideHUDGameInstance=false;
+	UPROPERTY()
+	float VolumeLevel=1;
 	UPROPERTY()
 	FString WindowState;
 	

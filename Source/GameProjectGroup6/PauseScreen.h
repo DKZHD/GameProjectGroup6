@@ -10,6 +10,7 @@
  * 
  */
 class UButton;
+class UBardGameInstance;
 
 UCLASS()
 class GAMEPROJECTGROUP6_API UPauseScreen : public UUserWidget
@@ -40,6 +41,9 @@ class GAMEPROJECTGROUP6_API UPauseScreen : public UUserWidget
 	//Input Mode
 	FInputModeGameOnly Game;
 	FInputModeUIOnly UI;
-	
+
+	//Other
+	UPROPERTY()
+	UBardGameInstance* BardGameInstance;
 
 };

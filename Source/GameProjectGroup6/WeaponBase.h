@@ -27,7 +27,8 @@ public:
 	// Components
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* Mesh;
-	ABardPlayer* Bard;
+	UPROPERTY()
+	ABardPlayer* Bard=nullptr;
 	UPROPERTY()
 	AEnemy* Enemy;
 	UPROPERTY(EditAnywhere)
