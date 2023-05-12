@@ -24,6 +24,10 @@ class GAMEPROJECTGROUP6_API UPauseScreen : public UUserWidget
 	UPROPERTY(EditAnywhere,meta=(BindWidget))
 	UButton* OptionsButton;
 
+	//Sound
+	UPROPERTY(EditAnywhere)
+	USoundBase* ClickSound;
+	
 	//Functions
 	virtual void NativeConstruct() override;
 	UFUNCTION()

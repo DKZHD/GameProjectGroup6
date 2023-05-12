@@ -24,6 +24,7 @@ void UPauseScreen::NativeConstruct()
 //When Resume is clicked
 void UPauseScreen::ResumeButtonClicked()
 {
+	UGameplayStatics::PlaySound2D(this,ClickSound);
 	UGameplayStatics::SetGamePaused(this, false);
 	ACustomHUD* CustomHUD=Cast<ACustomHUD>(UGameplayStatics::GetPlayerController(this,0)->GetHUD());
 	UGameplayStatics::GetPlayerController(this,0)->SetShowMouseCursor(false);
@@ -35,8 +36,9 @@ void UPauseScreen::ResumeButtonClicked()
 //When Main Menu is clicked
 void UPauseScreen::MenuButtonClicked()
 {
-	RemoveFromParent();
+	UGameplayStatics::PlaySound2D(GetWorld(),ClickSound);
 	UBardGameInstance* BardGameInstance=Cast<UBardGameInstance>(GetGameInstance());
+	RemoveFromParent();
 	BardGameInstance->HasSpawnedMainMenu=false;
 	UGameplayStatics::OpenLevel(this,"MainMenuMap");
 }
@@ -44,6 +46,7 @@ void UPauseScreen::MenuButtonClicked()
 //When Options is pressed
 void UPauseScreen::OptionsButtonClicked()
 {
+	UGameplayStatics::PlaySound2D(this,ClickSound);
 	ACustomHUD* CustomHUD=Cast<ACustomHUD>(UGameplayStatics::GetPlayerController(this,0)->GetHUD());
 	RemoveFromParent();
 	CustomHUD->SettingsScreen->AddToViewport(0);
