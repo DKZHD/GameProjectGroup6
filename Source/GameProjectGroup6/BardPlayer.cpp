@@ -187,7 +187,6 @@ void ABardPlayer::CombatFunction()
 				SpawnedFlute->Destroy();
 				SpawnedFlute = nullptr;
 			}
-			IsHarping=true;
 			LineTraceStart = DrumSpawn->GetComponentLocation();
 			LineTraceEnd = LineTraceStart + FVector(0, 0, -300);
 
