@@ -52,6 +52,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* DrumSpawn;
 	UPROPERTY(EditAnywhere)
+	USceneComponent* HarpSpawn;
+	UPROPERTY(EditAnywhere)
 	UDamageHandlingComponent* DamageHandlingComponent;
 	
 	//Spawned Components
@@ -112,6 +114,8 @@ public:
 	void SpawnDrumAOE();
 	UFUNCTION()
 	void PauseFunction();
+	UFUNCTION()
+	void DespawnHarp();
 	
 	//Variables
 	UPROPERTY()
@@ -130,11 +134,14 @@ public:
 	bool IsFluting;
 	UPROPERTY()
 	bool IsHarping;
+	UPROPERTY()
 	int WeaponNumber=1;
+	UPROPERTY()
 	FHitResult Hit;
 	FCollisionQueryParams TraceHit;
 	UPROPERTY()
 	ACustomHUD* CustomHUD;
+	UPROPERTY()
 	float TimeSpent;
 	
 	//Animations
@@ -148,6 +155,8 @@ public:
 	UAnimMontage* HarpAttack;
 	UPROPERTY(EditAnywhere, Category = "Custom Animations")
 	UAnimMontage* HitAnim;
+	UPROPERTY(EditAnywhere, Category = "Custom Animations")
+	UAnimMontage* HarpRelease;
 
 	//Animation Functions
 	UFUNCTION()

@@ -39,6 +39,8 @@ ABardPlayer::ABardPlayer()
 
 	DrumSpawn = CreateDefaultSubobject<USceneComponent>(TEXT("DrumSpawn"));
 	DrumSpawn->SetupAttachment(GetRootComponent());
+	HarpSpawn = CreateDefaultSubobject<USceneComponent>(TEXT("HarpSpawn"));
+	HarpSpawn->SetupAttachment(GetRootComponent());
 
 	DamageHandlingComponent = CreateDefaultSubobject<UDamageHandlingComponent>(TEXT("DamageHandlingComp"));
 
@@ -186,14 +188,9 @@ void ABardPlayer::CombatFunction()
 				SpawnedFlute->Destroy();
 				SpawnedFlute = nullptr;
 			}
-			LineTraceStart = DrumSpawn->GetComponentLocation();
-			LineTraceEnd = LineTraceStart + FVector(0, 0, -300);
-
-			bool HitSomething=GetWorld()->LineTraceSingleByChannel(Hit, LineTraceStart, LineTraceEnd, ECollisionChannel::ECC_Visibility);
-			if(HitSomething)
-			{
-				SpawnedHarp=GetWorld()->SpawnActor<AActor>(Harp,Hit.Location,GetCharacterMovement()->GetLastUpdateRotation());
-			}
+				SpawnedHarp=GetWorld()->SpawnActor<AActor>(Harp,HarpSpawn->GetComponentLocation(),GetCharacterMovement()->GetLastUpdateRotation());
+				if(SpawnedHarp)
+					PlayAnimMontage(HarpAttack);
 			
 		}
 		}
@@ -233,17 +230,24 @@ void ABardPlayer::CombatFunctionRelease()
 		{
 			GEngine->AddOnScreenDebugMessage(0,1,FColor::Red, TEXT("1 Damage"));
 			UGameplayStatics::PlaySound2D(this, HarpReleased1);
+			StopAnimMontage();
+			PlayAnimMontage(HarpRelease);
 		}
 		if(TimeSpent < 2 && TimeSpent > 1)
 		{
 			GEngine->AddOnScreenDebugMessage(0,1,FColor::Red, TEXT("2 Damage"));
 			UGameplayStatics::PlaySound2D(this, HarpReleased2);
+			StopAnimMontage();
+			PlayAnimMontage(HarpRelease);
 		}
 		if(TimeSpent > 2)
 		{
 			GEngine->AddOnScreenDebugMessage(0,1,FColor::Red, TEXT("3 Damage"));
 			UGameplayStatics::PlaySound2D(this, HarpReleased3);
+			StopAnimMontage();
+			PlayAnimMontage(HarpRelease);
 		}
+		GetWorldTimerManager().SetTimer(Handle,this,&ABardPlayer::DespawnHarp,1,false,0.5);
 		TimeSpent = 0;
 		bHarpSound1=false;
 		bHarpSound2=false;
@@ -272,6 +276,7 @@ void ABardPlayer::PauseFunction()
 	PauseScreenRef=CreateWidget<UUserWidget>(GetWorld(),PauseScreen);
 	PauseScreenRef->AddToViewport(0);
 }
+
 
 //Animation Functions
 void ABardPlayer::PlayHitAnim(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
@@ -345,6 +350,12 @@ void ABardPlayer::SpawnDrumAOE()
 		UGameplayStatics::ApplyRadialDamage(GetWorld(), 1.f, DrumSpawn->GetComponentLocation(), 500.f, BaseDamageType, IgnoredActors);
 }
 
+void ABardPlayer::DespawnHarp()
+{
+	SpawnedHarp->Destroy();
+	SpawnedHarp=nullptr;
+	GetWorldTimerManager().ClearTimer(Handle);
+}
 
 
 
