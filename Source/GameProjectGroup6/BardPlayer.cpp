@@ -161,8 +161,6 @@ void ABardPlayer::CombatFunction()
 			SpawnedFlute->Destroy();
 			SpawnedFlute = nullptr;
 		}
-			
-		/*LineTraceStart = GetActorLocation() + GetActorForwardVector() * FVector(100, 0, 0);*/
 		LineTraceStart = DrumSpawn->GetComponentLocation();
 		LineTraceEnd = LineTraceStart + FVector(0, 0, -300);
 
@@ -255,7 +253,6 @@ void ABardPlayer::CombatFunctionRelease()
 
 void ABardPlayer::Weaponswap()
 {
-	
 	if(!IsDrumming)
 	{
 		if(!IsFluting)
@@ -282,8 +279,11 @@ void ABardPlayer::PlayHitAnim(AActor* DamagedActor, float Damage, const class UD
 	PlayAnimMontage(HitAnim);
 	if(DamageHandlingComponent->Health<=0)
 	{
-		CustomHUD=Cast<ACustomHUD>(UGameplayStatics::GetPlayerController(this,0)->GetHUD());
-		CustomHUD->UIWidget->RemoveFromParent();
+		if(CustomHUD)
+		{
+			CustomHUD->UIWidget->RemoveFromParent();
+		}
+		
 		UUserWidget* Death=CreateWidget<UUserWidget>(GetWorld(),DeathScreen);
 		Death->AddToViewport(0);
 	}
