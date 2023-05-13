@@ -21,6 +21,8 @@ public:
 	
 	virtual void Tick(float DeltaSeconds) override;
 
+	virtual void OnPossess(APawn* InPawn) override;
+
 	//Which Behaviour tree to use
 	UPROPERTY(EditAnywhere)
 	UBehaviorTree* BT;
@@ -33,4 +35,6 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
+
+	
 };

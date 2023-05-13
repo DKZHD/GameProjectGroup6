@@ -41,6 +41,8 @@ AEnemy::AEnemy()
 	Collider = CreateDefaultSubobject<USphereComponent>(TEXT("Collider"));
 	Collider->SetupAttachment(GetMesh(),"ColliderSocket");
 	Collider->SetCollisionProfileName("IgnoreOnlyPawn");
+
+	AutoPossessAI= EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 	
 
@@ -49,8 +51,7 @@ void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	this->OnTakeRadialDamage.AddDynamic(this, &AEnemy::OnRadialDamage);
-	AutoPossessAI= EAutoPossessAI::PlacedInWorldOrSpawned;
-
+	
 	//Sets Enemy Health to Default Health
 	DamageHandling->Health = DamageHandling->DefaultHealth;
 
@@ -140,7 +141,8 @@ void AEnemy::Die()
 	}
 }
 
-//Check for overlap
+
+	//Check for overlap
 void AEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//Check if Bard cast worked

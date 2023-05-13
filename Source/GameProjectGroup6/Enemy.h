@@ -77,7 +77,7 @@ public:
 	//Collider
 	UPROPERTY(EditAnywhere)
 	USphereComponent* Collider;
-
+	
 	
 	//Handles
 	FTimerHandle Handle;
