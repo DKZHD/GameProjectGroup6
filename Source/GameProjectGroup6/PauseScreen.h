@@ -11,6 +11,7 @@
  */
 class UButton;
 class UBardGameInstance;
+class ACustomHUD;
 
 UCLASS()
 class GAMEPROJECTGROUP6_API UPauseScreen : public UUserWidget

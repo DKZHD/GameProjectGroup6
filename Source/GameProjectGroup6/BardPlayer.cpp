@@ -282,7 +282,7 @@ void ABardPlayer::PlayHitAnim(AActor* DamagedActor, float Damage, const class UD
 	PlayAnimMontage(HitAnim);
 	if(DamageHandlingComponent->Health<=0)
 	{
-		ACustomHUD* CustomHUD=Cast<ACustomHUD>(UGameplayStatics::GetPlayerController(this,0)->GetHUD());
+		CustomHUD=Cast<ACustomHUD>(UGameplayStatics::GetPlayerController(this,0)->GetHUD());
 		CustomHUD->UIWidget->RemoveFromParent();
 		UUserWidget* Death=CreateWidget<UUserWidget>(GetWorld(),DeathScreen);
 		Death->AddToViewport(0);
