@@ -38,11 +38,21 @@ class GAMEPROJECTGROUP6_API AMainTriggerBox : public ATriggerBox
 	UPROPERTY(BluePrintReadWrite, EditAnywhere, Category = "SpawnPoints")
 	TArray<USceneComponent*> SpawnPoints;
 
+	UPROPERTY(BluePrintReadWrite, EditAnywhere, Category = "SpawnPoints")
+	TArray<USceneComponent*> InGameSpawnPoints;
+
+	UPROPERTY()
+	TArray<AEnemy*> AllSpawnedEnemies;
+
 	UPROPERTY(BluePrintReadWrite, EditAnywhere, Category = "Enemies")
 	TSubclassOf<AEnemy> Enemy_BP;
 
 	UPROPERTY(BluePrintReadWrite, EditAnywhere, Category = "Enemies")
-	int SpawnAmount;
+	int SpawnAmountTotal;
+	UPROPERTY(BluePrintReadWrite, EditAnywhere, Category = "Enemies")
+	int SpawnAmountStart;
+	UPROPERTY(BluePrintReadWrite, EditAnywhere, Category = "Enemies")
+	int SpawnAmountInGame;
 
 	
 

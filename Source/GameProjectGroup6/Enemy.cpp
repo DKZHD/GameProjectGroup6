@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "BardPlayer.h"
 #include "Components/SphereComponent.h"
+#include "EnemyAIController.h"
 
 
 	// Sets default values
@@ -60,6 +61,8 @@ void AEnemy::BeginPlay()
 
 	//Bind the OnOverlapBegin function
 	Collider -> OnComponentBeginOverlap.AddDynamic(this, &AEnemy::OnOverlapBegin);
+
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
 }
 
 // Called every frame
@@ -140,6 +143,12 @@ void AEnemy::Die()
 		GetWorld()->SpawnActor<AActor>(ItemsToSpawn, SpawnLocation, SpawnRotation, SpawnParams);
 	}
 }
+
+	void AEnemy::TakenOver()
+	{
+		GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Taken Over");
+	}
 
 
 	//Check for overlap

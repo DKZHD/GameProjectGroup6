@@ -8,40 +8,55 @@
 #include "EntitySystem/MovieSceneEntitySystemRunner.h"
 #include "Containers/UnrealString.h"
 #include "BardPlayer.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 AMainTriggerBox::AMainTriggerBox()
 {
-	SpawnAmount = 3;
-
-	for (int i = 0; i < SpawnAmount; i++)
+	SpawnAmountStart = 3;
+	SpawnAmountInGame = 3;
+	
+	for (int i = 0; i < SpawnAmountStart; i++)
 	{
-		SpawnPoints.Add(CreateDefaultSubobject<USceneComponent>(FName(FString::FromInt(i))));
+		SpawnPoints.Add(CreateDefaultSubobject<USceneComponent>(FName("StartGame_"+FString::FromInt(i+1))));
 	}
+	for(int i = 0; i < SpawnAmountInGame; i++)
+	{
+		InGameSpawnPoints.Add(CreateDefaultSubobject<USceneComponent>(FName("InGame_"+FString::FromInt(i+1))));
+	}
+	
 }
 
 void AMainTriggerBox::BeginPlay()
 {
 	Super::BeginPlay();
 	OnActorBeginOverlap.AddDynamic(this, &AMainTriggerBox::OnOverlapBegin);
-
-	SpawnLocation = FVector(960.0, -4570.f, 114.f);
+    	for (int i = 0 ; i < SpawnPoints.Num(); i++)
+    	{
+    		SpawnEnemy(SpawnPoints[i]);
+    	}
 }
 
 void AMainTriggerBox::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
 {
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Overlap Begin"));
 	Player = Cast<ABardPlayer>(OtherActor);
-	for (int i = 0; i < SpawnAmount; i++)
-       	{
-       	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Spawn Enemy"));
-		SpawnEnemy(SpawnPoints[i]);
-       	}
+	if (Enemy)
+	{
+		for (int i = 0 ; i < InGameSpawnPoints.Num(); i++)
+		{
+			SpawnEnemy(InGameSpawnPoints[i]);
+		}
+		for (int i = 0 ; i < AllSpawnedEnemies.Num(); i++)
+		{
+			AllSpawnedEnemies[i]->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+		}
+	}
+	
 	this->Destroy();
 }
 
 void AMainTriggerBox::SpawnEnemy(USceneComponent* SpawnPoint)
 {
 	Enemy = GetWorld()->SpawnActor<AEnemy>(Enemy_BP, SpawnPoint->GetComponentLocation(), FRotator::ZeroRotator);
-
+	AllSpawnedEnemies.Add(Enemy);
 }

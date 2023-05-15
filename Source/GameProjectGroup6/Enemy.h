@@ -47,6 +47,9 @@ public:
 	UFUNCTION()
 	void Die();
 
+	UFUNCTION()
+	void TakenOver();
+
 	
 	TSubclassOf<UDamageType> BaseDamage;
 	
@@ -77,6 +80,9 @@ public:
 	//Collider
 	UPROPERTY(EditAnywhere)
 	USphereComponent* Collider;
+
+	UPROPERTY()
+	class AEnemyAIController* AIController;
 	
 	
 	//Handles
