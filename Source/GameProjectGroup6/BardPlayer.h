@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "BardPlayer.generated.h"
 
+class AArrow;
 class USpringArmComponent;
 class UCameraComponent;
 class AWeaponBase;
@@ -47,6 +48,8 @@ public:
 	TSubclassOf<AActor> DrumStick_BP;
 	UPROPERTY(EditAnywhere, Category="Harp")
 	TSubclassOf<AWeaponBase> Harp;
+	UPROPERTY(EditAnywhere, Category="Harp")
+	TSubclassOf<AArrow> Arrow;
 
 	//Additional Components 
 	UPROPERTY(EditAnywhere)
@@ -63,6 +66,8 @@ public:
 	AActor* SpawnedHarp=nullptr;
 	UPROPERTY()
 	AActor* SpawnedFlute = nullptr;
+	UPROPERTY()
+	AArrow* ArrowRef=nullptr;
 	UPROPERTY()
 	AActor* SpawnedDrum = nullptr;
 	UPROPERTY()
