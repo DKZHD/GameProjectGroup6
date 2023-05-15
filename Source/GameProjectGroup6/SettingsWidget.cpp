@@ -29,19 +29,14 @@ void USettingsWidget::NativeConstruct()
 	HideHUD->OnCheckStateChanged.AddDynamic(this,&USettingsWidget::HideHUDFunction);
 	VolumeSlider->OnValueChanged.AddDynamic(this,&USettingsWidget::VolumeChanged);
 	Return->OnClicked.AddDynamic(this,&USettingsWidget::GoBack);
+	MuteButton->OnCheckStateChanged.AddDynamic(this,&USettingsWidget::MuteButtonFunctionality);
 	
 	VolumeSlider->SetValue(BardGameInstance->VolumeLevel);
 	VolumeAmount->SetText(FText::FromString(FString::FromInt(FMath::FloorToInt(BardGameInstance->VolumeLevel*100))));
 	VsyncCheckBox->SetIsChecked(BardGameInstance->VSyncBox);
+	MuteButton->SetIsChecked(BardGameInstance->Muted);
 	HideHUD->SetIsChecked(BardGameInstance->HideHUDGameInstance);
 	WindowSettings->SetSelectedOption(BardGameInstance->WindowState);
-	
-	if(!WindowSettings)
-		GEngine->AddOnScreenDebugMessage(-1,2.f,FColor::Red,"Can't find");
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1,2.f,FColor::Red,"Found IT!");
-	}
 }
 
 //VSync CheckBox
@@ -105,28 +100,27 @@ void USettingsWidget::WindowModeFunction(FString SelectedItem, ESelectInfo::Type
          		UserSettings->ApplySettings(true);
          		UserSettings->SaveSettings();
          	}
- 		
  	}
  }
 
 //Return button
 void USettingsWidget::GoBack()
 {
+	
 	BardGameInstance=Cast<UBardGameInstance>(GetGameInstance());
 	if(CustomHUD->MenuWidget->OpenedFromMenu)
 	{
-		CustomHUD->MenuWidget->AddToViewport();
 		CustomHUD->MenuWidget->OpenedFromMenu=false;
+		CustomHUD->MenuWidget->AddToViewport(0);
 	}
 	
-	else if(BardGameInstance->HasSpawnedMainMenu)
+	else if(!CustomHUD->MenuWidget->OpenedFromMenu)
 	{
 		ABardPlayer* BardPlayer=Cast<ABardPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
+		CustomHUD->SettingsScreen->RemoveFromParent();
 		if(BardPlayer)
 		BardPlayer->PauseScreenRef->AddToViewport(0);
 	}
-	if(this)
-	this->RemoveFromParent();
 }
 //Volume Slider
 void USettingsWidget::VolumeChanged(float value)
@@ -135,5 +129,30 @@ void USettingsWidget::VolumeChanged(float value)
 	UGameplayStatics::PushSoundMixModifier(GetWorld(),SoundMix);
 	BardGameInstance->VolumeLevel=value;
 	VolumeAmount->SetText(FText::FromString(FString::FromInt(FMath::FloorToInt(value*100))));
+	if(MuteButton->IsChecked())
+	{
+		MuteButton->SetIsChecked(false);
+	}
+}
+
+void USettingsWidget::MuteButtonFunctionality(bool bIsChecked)
+{
+	if(bIsChecked)
+	{
+		UGameplayStatics::SetSoundMixClassOverride(GetWorld(),SoundMix,Master,0);
+		UGameplayStatics::PushSoundMixModifier(GetWorld(),SoundMix);
+		VolumeSlider->SetValue(0);
+		VolumeAmount->SetText(FText::FromString(FString::FromInt(0)));
+		BardGameInstance->VolumeLevel=0;
+		BardGameInstance->Muted=true;
+	}
+	
+	if(!bIsChecked)
+	{
+		VolumeSlider->SetValue(BardGameInstance->VolumeLevel);
+		VolumeAmount->SetText(FText::FromString(FString::FromInt(FMath::FloorToInt(BardGameInstance->VolumeLevel*100))));
+		BardGameInstance->Muted=false;
+	}
+		
 }
 

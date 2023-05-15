@@ -24,6 +24,8 @@ public:
 	UPROPERTY()
 	bool VSyncBox=false;
 	UPROPERTY()
+	bool Muted;
+	UPROPERTY()
 	bool HideHUDGameInstance=false;
 	UPROPERTY()
 	float VolumeLevel=1;

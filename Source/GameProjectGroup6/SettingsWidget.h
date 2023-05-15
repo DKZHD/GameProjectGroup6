@@ -32,6 +32,8 @@ public:
 	UPROPERTY(meta=(BindWidget))
 	UCheckBox* HideHUD;
 	UPROPERTY(meta=(BindWidget))
+	UCheckBox* MuteButton;
+	UPROPERTY(meta=(BindWidget))
 	UButton* Return;
 	UPROPERTY(meta=(BindWidget))
 	USlider* VolumeSlider;
@@ -69,6 +71,7 @@ public:
 	void GoBack();
 	UFUNCTION()
 	void VolumeChanged(float value);
-	
+	UFUNCTION()
+	void MuteButtonFunctionality(bool bIsChecked);
 	
 };
