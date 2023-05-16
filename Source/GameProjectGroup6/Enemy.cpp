@@ -171,6 +171,7 @@ void AEnemy::BowAttackFunction()
 	if(CanAttack)
 	{
 		PlayAnimMontage(BowMontage);
+		
 		FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Bard->GetActorLocation());
 		ArrowRef = GetWorld()->SpawnActor<AArrow>(Arrow, GetActorLocation()+FVector(75,0,0), FRotator(0,Rotation.Yaw,0));
 		if(ArrowRef)
