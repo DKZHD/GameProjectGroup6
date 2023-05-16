@@ -96,6 +96,9 @@ public:
 	UPROPERTY()
 	bool ItHit;
 
+	UPROPERTY()
+	bool CanShoot;
+
 	//Refference to the item
 	UPROPERTY()
 	AItems* Item;
@@ -139,6 +142,9 @@ public:
 
 	UFUNCTION()
 	void AnimNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload);
+	
+	UFUNCTION()
+	void WhenCompleted(UAnimMontage* Montage, bool bInterrupted);
 	
 	//Handles
 	FTimerHandle Handle;

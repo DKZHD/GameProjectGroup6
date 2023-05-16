@@ -50,6 +50,7 @@ AEnemy::AEnemy()
 
 	Bow = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Bow"));
 	Bow->SetupAttachment(GetMesh(), "BowSocket");
+	CanShoot = true;
 
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
@@ -78,6 +79,7 @@ void AEnemy::BeginPlay()
 	if(AnimInstance)
 	{
 		AnimInstance->OnPlayMontageNotifyBegin.AddDynamic(this, &AEnemy::AnimNotifyBegin);
+		AnimInstance->OnMontageEnded.AddDynamic(this,&AEnemy::WhenCompleted);
 	}
 }
 
@@ -168,23 +170,15 @@ void AEnemy::AttackFunction()
 
 void AEnemy::BowAttackFunction()
 {
-	if(CanAttack)
+	if(CanShoot)
 	{
 		PlayAnimMontage(BowMontage);
-		
-		FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Bard->GetActorLocation());
-		ArrowRef = GetWorld()->SpawnActor<AArrow>(Arrow, GetActorLocation()+FVector(75,0,0), FRotator(0,Rotation.Yaw,0));
-		if(ArrowRef)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Arrow Spawned");
-		}
-        
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Attacking");
-		CanAttack = false;
+		CanShoot = false;
 	}
-	else
-		CanAttack = true;
-	
+}
+void AEnemy::WhenCompleted(UAnimMontage* Montage, bool bInterrupted)
+{
+	CanShoot = true;
 }
 
 	//Check for overlap
@@ -212,7 +206,18 @@ void AEnemy::AnimNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayloa
 	{
 		Collider->SetCollisionProfileName("NoCollision");
 	}
+	if(NotifyName=="Shoot")
+    {
+        FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Bard->GetActorLocation());
+        ArrowRef = GetWorld()->SpawnActor<AArrow>(Arrow, GetActorLocation()+FVector(75,0,0), FRotator(0,Rotation.Yaw,0));
+    }
+	if(NotifyName=="ShootEnd")
+	{
+		CanShoot = true;
+	}
 }
+
+	
 
 
 
