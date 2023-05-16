@@ -5,11 +5,13 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Enemy.generated.h"
+class USoundCue;
 class ABardPlayer;
 class USphereComponent;
 class UDamageHandlingComponent;
 class UHealthBardComponent;
 class AItems;
+class UAnimMontage;
 
 UCLASS()
 class GAMEPROJECTGROUP6_API AEnemy : public ACharacter
@@ -35,6 +37,10 @@ public:
     UFUNCTION()
 	void ChangeMovementMode();
 
+	//Individual Function when taking damage
+	UFUNCTION()
+	void OnAnyDamageTaken(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+	
 	// When the enemy is hit by radial damage
 	UFUNCTION()
 	void OnRadialDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, FVector Origin, FHitResult HitInfo, class AController* InstigatedBy, AActor* DamageCauser);
@@ -83,7 +89,14 @@ public:
 
 	UPROPERTY()
 	class AEnemyAIController* AIController;
-	
+
+	//Play Hit animation
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* GoblinHit;
+
+	//Sounds
+	UPROPERTY(EditAnywhere)
+	USoundBase* DamageSound;
 	
 	//Handles
 	FTimerHandle Handle;

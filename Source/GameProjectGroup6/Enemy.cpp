@@ -52,6 +52,7 @@ void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	this->OnTakeRadialDamage.AddDynamic(this, &AEnemy::OnRadialDamage);
+	this->OnTakeAnyDamage.AddDynamic(this,&AEnemy::OnAnyDamageTaken);
 	
 	//Sets Enemy Health to Default Health
 	DamageHandling->Health = DamageHandling->DefaultHealth;
@@ -106,8 +107,14 @@ void AEnemy::OnRadialDamage(AActor* DamagedActor, float Damage, const UDamageTyp
 	this->LaunchCharacter(FVector(0, 0, 750.f), true, false);
 	IsStunned = true;
 	CanAttack = false;
-	GetWorldTimerManager().SetTimer(Handle, this, &AEnemy::ResetStun, 1, false, 4.f);
+	GetWorldTimerManager().SetTimer(Handle, this, &AEnemy::ResetStun, 1, false, 3.f);
 	GetWorldTimerManager().SetTimer(GravityHandle, this, &AEnemy::ChangeMovementMode, 1, false, .6);
+}
+
+void AEnemy::OnAnyDamageTaken(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+{
+	UGameplayStatics::PlaySound2D(GetWorld(),DamageSound,1,1);
+	PlayAnimMontage(GoblinHit);
 }
 
 // Change movement mode to none
@@ -117,7 +124,7 @@ void AEnemy::ChangeMovementMode()
 	GetWorldTimerManager().ClearTimer(GravityHandle);
 }
 
-// Reset stun, timer and movement mode
+	// Reset stun, timer and movement mode
 void AEnemy::ResetStun()
 {
 	IsStunned = false;
@@ -168,5 +175,6 @@ void AEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 		}
 	}
 }
+
 
 
