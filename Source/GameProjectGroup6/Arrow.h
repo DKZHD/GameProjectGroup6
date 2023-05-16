@@ -33,6 +33,8 @@ public:
 	float Damage;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UDamageType> DamageType;
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* Root;
 
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

@@ -14,18 +14,20 @@ AEnemyAIController::AEnemyAIController()
 void AEnemyAIController::BeginPlay()
 {
 	Super::BeginPlay();
+	RunBehaviorTree(BT);
 }
 
 void AEnemyAIController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	RunBehaviorTree(BT);
+	
 }
 
 void AEnemyAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
+	RunBehaviorTree(BT);	
 	ABardPlayer* Bard = Cast<ABardPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	UseBlackboard(BBKey, BB);
         	

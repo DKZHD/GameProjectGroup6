@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Enemy.generated.h"
+
 class USoundCue;
 class ABardPlayer;
 class USphereComponent;
@@ -13,6 +14,7 @@ class UHealthBardComponent;
 class AItems;
 class UAnimMontage;
 class AEnemyAIController;
+class AArrow;
 
 
 UCLASS()
@@ -60,6 +62,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void AttackFunction();
+
+	UFUNCTION(BlueprintCallable)
+	void BowAttackFunction();
 	
 	UFUNCTION()
 		void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -71,7 +76,10 @@ public:
 	
 	//Item to spawn
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-    	TSubclassOf<AItems> ItemsToSpawn;
+	TSubclassOf<AItems> ItemsToSpawn;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Arrow")
+	TSubclassOf<AArrow> Arrow;
 	
 	//Bool if enemy is attacking
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Enemy")
@@ -85,16 +93,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
 	int Droprate;
 
-	//Type of Enemy
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-	bool BowEnemy;
-
 	UPROPERTY()
 	bool ItHit;
 
 	//Refference to the item
 	UPROPERTY()
 	AItems* Item;
+
+	UPROPERTY()
+	AArrow* ArrowRef;
 	
 	//Bard Player
 	UPROPERTY()
@@ -114,12 +121,18 @@ public:
 	//Sounds
 	UPROPERTY(EditAnywhere)
 	USoundBase* DamageSound;
-
+	
+	UPROPERTY()
+	UAnimInstance* AnimInstance;
+	
 	UPROPERTY(EditAnywhere, Category = "Animation")
 	UAnimMontage* HitMontage;
 
-	UPROPERTY()
-	UAnimInstance* AnimInstance;
+	UPROPERTY(EditAnywhere, Category = "Animation")
+	UAnimMontage* BowMontage;
+
+    UPROPERTY(EditAnywhere, Category = "Mesh")
+	UStaticMeshComponent* Bow;
 	
 	// UPROPERTY(EditAnywhere, Category = "Animation")
 	// UAnimMontage* StunnedMontage;

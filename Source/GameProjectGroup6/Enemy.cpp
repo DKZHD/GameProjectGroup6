@@ -12,6 +12,8 @@
 #include "BardPlayer.h"
 #include "Components/SphereComponent.h"
 #include "EnemyAIController.h"
+#include "Arrow.h"
+#include "Kismet/KismetMathLibrary.h"
 
 
 
@@ -44,8 +46,12 @@ AEnemy::AEnemy()
 	Collider->SetupAttachment(GetMesh(),"ColliderSocket");
 	Collider->SetCollisionProfileName("OverlapOnlyPawn");
 	Collider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	ItHit = true;
 
-	AutoPossessAI= EAutoPossessAI::PlacedInWorldOrSpawned;
+	Bow = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Bow"));
+	Bow->SetupAttachment(GetMesh(), "BowSocket");
+
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 	
 
@@ -153,17 +159,33 @@ void AEnemy::Die()
 	void AEnemy::TakenOver()
 	{
 		GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Taken Over");
 	}
 
 void AEnemy::AttackFunction()
 {
 	PlayAnimMontage(HitMontage);
-	// if(BowEnemy)
-	// {
-	// 	PlayAnimMontage();
-	// 	}
 }
+
+void AEnemy::BowAttackFunction()
+{
+	if(CanAttack)
+	{
+		PlayAnimMontage(BowMontage);
+		FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Bard->GetActorLocation());
+		ArrowRef = GetWorld()->SpawnActor<AArrow>(Arrow, GetActorLocation()+FVector(75,0,0), FRotator(0,Rotation.Yaw,0));
+		if(ArrowRef)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Arrow Spawned");
+		}
+        
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Attacking");
+		CanAttack = false;
+	}
+	else
+		CanAttack = true;
+	
+}
+
 	//Check for overlap
 void AEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
@@ -172,7 +194,6 @@ void AEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 	//Check if the overlapping component is the bard player
 	if(OtherActor->IsA<ABardPlayer>() && !ItHit)
 	{
-		GEngine->AddOnScreenDebugMessage(0,2.f,FColor::Magenta,"Player Hit!");
 		//Applies damage to bard player
 		UGameplayStatics::ApplyDamage(OtherActor, 1, this->GetController(), this, UDamageType::StaticClass());
 		ItHit = true;
