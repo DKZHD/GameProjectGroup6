@@ -30,7 +30,7 @@ ABardPlayer::ABardPlayer()
 	//Initialize Components
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(GetRootComponent());
-	SpringArm->TargetArmLength = 800.f;
+	SpringArm->TargetArmLength = 900.f;
 	SpringArm->AddRelativeRotation(FRotator(-45.f, 25.f, 0.f));
 	SpringArm->bInheritYaw = false;
 	SpringArm->bDoCollisionTest = false;
@@ -45,13 +45,14 @@ ABardPlayer::ABardPlayer()
 	HarpSpawn->SetupAttachment(GetRootComponent());
 
 	DamageHandlingComponent = CreateDefaultSubobject<UDamageHandlingComponent>(TEXT("DamageHandlingComp"));
+	DamageHandlingComponent->Health=5;
 
 	//Possession
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
 	//Orient To Movement
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->RotationRate = FRotator(0, 300, 0);
+	GetCharacterMovement()->RotationRate = FRotator(0, 400, 0);
 }
  
 // Called when the game starts or when spawned
@@ -61,7 +62,7 @@ void ABardPlayer::BeginPlay()
 	CustomHUD=Cast<ACustomHUD>(UGameplayStatics::GetPlayerController(this,0)->GetHUD());
 	AnimInstance=GetMesh()->GetAnimInstance();
 	CameraManager=UGameplayStatics::GetPlayerCameraManager(this,0);
-	DamageHandlingComponent->Health=5;
+	
 	//When Hit play animation
 	this->OnTakeAnyDamage.AddDynamic(this, &ABardPlayer::PlayHitAnim);
 	
@@ -185,7 +186,6 @@ void ABardPlayer::CombatFunction()
         					DrumStick2 = GetWorld()->SpawnActor<AActor>(DrumStick_BP,Position,FRotator::ZeroRotator);
         					DrumStick1->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetIncludingScale,"DrumStickL");
         					DrumStick2->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetIncludingScale,"DrumStickR");
-                                			
         				}
         			}
         		
@@ -301,7 +301,7 @@ void ABardPlayer::PauseFunction()
 //Animation Functions
 void ABardPlayer::PlayHitAnim(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
-	if(!IsHarping)
+	if(!IsHarping&&WeaponNumber!=3)
 	{
 		PlayAnimMontage(HitAnim);
 	}
@@ -356,6 +356,13 @@ void ABardPlayer::WhenCompleted(UAnimMontage* Montage, bool bInterrupted)
 		{
 			DrumStick1->Destroy();
 			DrumStick2->Destroy();
+		}
+		if(Montage==HarpAttack)
+		{
+			ArrowRef=nullptr;
+			if(SpawnedHarp)
+			DespawnHarp();
+			IsHarping=false;
 		}
 	}
 	else
