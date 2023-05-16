@@ -14,6 +14,7 @@
 #include "EnemyAIController.h"
 
 
+
 	// Sets default values
 AEnemy::AEnemy()
 {
@@ -41,7 +42,8 @@ AEnemy::AEnemy()
 	//Initiates the collider
 	Collider = CreateDefaultSubobject<USphereComponent>(TEXT("Collider"));
 	Collider->SetupAttachment(GetMesh(),"ColliderSocket");
-	Collider->SetCollisionProfileName("IgnoreOnlyPawn");
+	Collider->SetCollisionProfileName("OverlapOnlyPawn");
+	Collider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	AutoPossessAI= EAutoPossessAI::PlacedInWorldOrSpawned;
 }
@@ -64,22 +66,19 @@ void AEnemy::BeginPlay()
 	Collider -> OnComponentBeginOverlap.AddDynamic(this, &AEnemy::OnOverlapBegin);
 
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+	
+	//Initialize AnimNotify
+	AnimInstance = GetMesh()->GetAnimInstance();
+	if(AnimInstance)
+	{
+		AnimInstance->OnPlayMontageNotifyBegin.AddDynamic(this, &AEnemy::AnimNotifyBegin);
+	}
 }
 
 // Called every frame
 void AEnemy::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
-
-	// Checks if enemy is attacking and sets the collision
-	 if(CanAttack)
-	 {
-	 	Collider ->SetCollisionProfileName("OverlapOnlyPawn");
-	 }
-	 if(!CanAttack)
-	 {
-	 	Collider ->SetCollisionProfileName("IgnoreOnlyPawn");
-	 }
+	Super::Tick(DeltaTime); 
 
 	// Checks DamageHandling to see if Enemy is dead
 	if(DamageHandling->IsDead)
@@ -157,24 +156,42 @@ void AEnemy::Die()
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Taken Over");
 	}
 
-
+void AEnemy::AttackFunction()
+{
+	PlayAnimMontage(HitMontage);
+	// if(BowEnemy)
+	// {
+	// 	PlayAnimMontage();
+	// 	}
+}
 	//Check for overlap
 void AEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//Check if Bard cast worked
-	if(Bard)
+	
+	//Check if the overlapping component is the bard player
+	if(OtherActor->IsA<ABardPlayer>() && !ItHit)
 	{
-		//Check if the overlapping component is the bard player
-		if(OtherActor->IsA<ABardPlayer>())
-		{
-			GEngine->AddOnScreenDebugMessage(0,2.f,FColor::Magenta,"Player Hit!");
-
-			//Applies damage to bard player
-			UGameplayStatics::ApplyDamage(Bard, 1, this->GetController(), this, UDamageType::StaticClass());
-			
-		}
+		GEngine->AddOnScreenDebugMessage(0,2.f,FColor::Magenta,"Player Hit!");
+		//Applies damage to bard player
+		UGameplayStatics::ApplyDamage(OtherActor, 1, this->GetController(), this, UDamageType::StaticClass());
+		ItHit = true;
 	}
 }
+
+void AEnemy::AnimNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload)
+{
+	if(NotifyName=="Start")
+	{
+		Collider->SetCollisionProfileName("OverlapAllDynamic");
+		ItHit = false;
+	}
+	if(NotifyName=="End")
+	{
+		Collider->SetCollisionProfileName("NoCollision");
+	}
+}
+
 
 
 

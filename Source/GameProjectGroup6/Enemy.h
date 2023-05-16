@@ -12,6 +12,8 @@ class UDamageHandlingComponent;
 class UHealthBardComponent;
 class AItems;
 class UAnimMontage;
+class AEnemyAIController;
+
 
 UCLASS()
 class GAMEPROJECTGROUP6_API AEnemy : public ACharacter
@@ -56,8 +58,20 @@ public:
 	UFUNCTION()
 	void TakenOver();
 
+	UFUNCTION(BlueprintCallable)
+	void AttackFunction();
 	
+	UFUNCTION()
+		void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+    	                    UPrimitiveComponent* OtherComponent,
+    	                    int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UPROPERTY()
 	TSubclassOf<UDamageType> BaseDamage;
+	
+	//Item to spawn
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+    	TSubclassOf<AItems> ItemsToSpawn;
 	
 	//Bool if enemy is attacking
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Enemy")
@@ -71,14 +85,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
 	int Droprate;
 
+	//Type of Enemy
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
+	bool BowEnemy;
+
+	UPROPERTY()
+	bool ItHit;
+
 	//Refference to the item
 	UPROPERTY()
 	AItems* Item;
-
-	//Item to spawn
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	TSubclassOf<AItems> ItemsToSpawn;
-
+	
 	//Bard Player
 	UPROPERTY()
 	ABardPlayer* Bard;
@@ -88,7 +105,7 @@ public:
 	USphereComponent* Collider;
 
 	UPROPERTY()
-	class AEnemyAIController* AIController;
+	AEnemyAIController* AIController;
 
 	//Play Hit animation
 	UPROPERTY(EditAnywhere)
@@ -97,6 +114,18 @@ public:
 	//Sounds
 	UPROPERTY(EditAnywhere)
 	USoundBase* DamageSound;
+
+	UPROPERTY(EditAnywhere, Category = "Animation")
+	UAnimMontage* HitMontage;
+
+	UPROPERTY()
+	UAnimInstance* AnimInstance;
+	
+	// UPROPERTY(EditAnywhere, Category = "Animation")
+	// UAnimMontage* StunnedMontage;
+
+	UFUNCTION()
+	void AnimNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload);
 	
 	//Handles
 	FTimerHandle Handle;
@@ -111,11 +140,7 @@ private:
 	// Component to handle the healthbar
 	UPROPERTY(VisibleAnywhere)
 	UHealthBardComponent* HealthBarWidget;
-
-	//Checks for overlap
-	UFUNCTION()
-		void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-    	                    UPrimitiveComponent* OtherComponent,
-    	                    int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	
 
 };
+
