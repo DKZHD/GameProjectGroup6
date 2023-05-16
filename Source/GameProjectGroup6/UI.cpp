@@ -6,6 +6,7 @@
 #include "BardPlayer.h"
 #include "DamageHandlingComponent.h"
 #include "Components/Image.h"
+#include "Components/ProgressBar.h"
 #include "Kismet/GameplayStatics.h"
 
 void UUI::NativeConstruct()
@@ -48,6 +49,12 @@ float UUI::GetHealthPercent()
 	}
 	return 0;
 
+}
+
+float UUI::GetCooldownPercentage()
+{
+	CurrentCooldownPercentage=Bard->DrumCooldown/7.f;
+	return CurrentCooldownPercentage;
 }
 
 void UUI::ChangeUIPicture()

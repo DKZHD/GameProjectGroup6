@@ -46,7 +46,7 @@ ABardPlayer::ABardPlayer()
 
 	DamageHandlingComponent = CreateDefaultSubobject<UDamageHandlingComponent>(TEXT("DamageHandlingComp"));
 	DamageHandlingComponent->Health=5;
-
+	
 	//Possession
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
@@ -90,6 +90,9 @@ void ABardPlayer::BeginPlay()
 void ABardPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if(IsDrumming)
+		DrumCooldown-=DeltaTime;
 }
 
 // Called to bind functionality to input
@@ -125,6 +128,7 @@ void ABardPlayer::ActivateMovement()
 {
 	GetCharacterMovement()->MovementMode = EMovementMode::MOVE_Walking;
 	SpawnedDrum = nullptr;
+	DrumCooldown=7;
 	DrumAnimation=false;
 	GetWorldTimerManager().ClearTimer(Handle);
 	GetWorldTimerManager().SetTimer(Handle, this, &ABardPlayer::DrumAgain,1.f,false,7.f);
@@ -322,13 +326,13 @@ void ABardPlayer::AnimNotifyBegin(FName NotifyName, const FBranchingPointNotifyP
 {
 	//FluteNotifies
 	if(NotifyName=="1st")
-		FluteRef->FluteCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		FluteRef->FluteCollision->SetCollisionProfileName("NoCollision");
 	if(NotifyName=="2nd")
-		FluteRef->FluteCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		FluteRef->FluteCollision->SetCollisionProfileName("OverlapAllDynamic");
 	if(NotifyName=="Start")
-		FluteRef->FluteCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		FluteRef->FluteCollision->SetCollisionProfileName("OverlapAllDynamic");
 	if(NotifyName=="End")
-		FluteRef->FluteCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		FluteRef->FluteCollision->SetCollisionProfileName("NoCollision");
 	//DrumNotifies
 	if(NotifyName=="Drum1")
 		CameraManager->StartCameraShake(BP_DrumShake,.5);
@@ -349,7 +353,7 @@ void ABardPlayer::WhenCompleted(UAnimMontage* Montage, bool bInterrupted)
 	{
 		if(Montage==FluteAttack)
 		{
-			FluteRef->FluteCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			FluteRef->FluteCollision->SetCollisionProfileName("NoCollision");
 			IsFluting=false;
 		}
 		if(Montage==DrumAttack&&Montage!=HitAnim)
@@ -369,7 +373,7 @@ void ABardPlayer::WhenCompleted(UAnimMontage* Montage, bool bInterrupted)
 	{
 		if(Montage==FluteAttack)
 		{
-			FluteRef->FluteCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			FluteRef->FluteCollision->SetCollisionProfileName("NoCollision");
 			IsFluting=false;
 		}
 		if(Montage==HarpAttack)
@@ -386,6 +390,7 @@ void ABardPlayer::WhenCompleted(UAnimMontage* Montage, bool bInterrupted)
 void ABardPlayer::SpawnDrumAOE()
 {
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), DrumAOE, Hit.Location+FVector(0,0,1));
+	
 	if (SpawnedDrum)
 		UGameplayStatics::ApplyRadialDamage(GetWorld(), 1.f, DrumSpawn->GetComponentLocation(), 500.f, BaseDamageType, IgnoredActors);
 }
@@ -401,6 +406,7 @@ void ABardPlayer::DespawnHarp()
 void ABardPlayer::DrumAgain()
 {
 	IsDrumming=false;
+	DrumCooldown=0;
 	GetWorldTimerManager().ClearTimer(Handle);
 }
 

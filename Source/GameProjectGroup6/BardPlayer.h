@@ -136,6 +136,8 @@ public:
 	UPROPERTY()
 	float AnimDuration;
 	UPROPERTY()
+	float DrumCooldown;
+	UPROPERTY()
 	bool IsDrumming;
 	UPROPERTY()
 	bool IsFluting;

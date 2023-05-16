@@ -24,6 +24,8 @@ class GAMEPROJECTGROUP6_API UUI : public UUserWidget
 	// Widgets
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UProgressBar* HP_Bar;
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UProgressBar* CoolDownBar;
 	UPROPERTY(EditAnywhere,meta=(BindWidget))
 	UImage* FluteImage;
 	UPROPERTY(EditAnywhere,meta=(BindWidget))
@@ -38,10 +40,15 @@ class GAMEPROJECTGROUP6_API UUI : public UUserWidget
 	// Variable for health in player
 	UPROPERTY()
 	float Health;
+	UPROPERTY()
+	float CurrentCooldownPercentage;
 
 	// Function to adjust Health bar with player's current health
 	UFUNCTION(BlueprintPure)
 		float GetHealthPercent();
+	UFUNCTION(BlueprintPure)
+		float GetCooldownPercentage();
+	
 public:
 	UFUNCTION()
 	void ChangeUIPicture();
