@@ -123,9 +123,10 @@ void ABardPlayer::Movement(const FInputActionValue& Value)
 void ABardPlayer::ActivateMovement()
 {
 	GetCharacterMovement()->MovementMode = EMovementMode::MOVE_Walking;
-	IsDrumming = false;
 	SpawnedDrum = nullptr;
+	DrumAnimation=false;
 	GetWorldTimerManager().ClearTimer(Handle);
+	GetWorldTimerManager().SetTimer(Handle, this, &ABardPlayer::DrumAgain,1.f,false,7.f);
 }
 
 //Input Functions
@@ -133,8 +134,6 @@ void ABardPlayer::CombatFunction()
 {
 	if(!IsHarping)
 	{
-		if(!IsDrumming)
-        	{
         		if(!IsFluting)
         		{
         			if (WeaponNumber == 1)
@@ -155,36 +154,41 @@ void ABardPlayer::CombatFunction()
         			
         			}
         		}
-        		if (WeaponNumber == 2)
-        		{
-        		IsDrumming = true;
-        		GetCharacterMovement()->MovementMode = EMovementMode::MOVE_None;
-        		GetWorldTimerManager().SetTimer(Handle, this, &ABardPlayer::ActivateMovement,1.f,false,2.f);
-        		GetWorldTimerManager().SetTimer(DrumAOEHandle, this, &ABardPlayer::SpawnDrumAOE,1.f,false,1.2);
-        		PlayAnimMontage(DrumAttack);
-        		if (SpawnedFlute)
-        		{
-        			SpawnedFlute->Destroy();
-        			SpawnedFlute = nullptr;
-        		}
-        		LineTraceStart = DrumSpawn->GetComponentLocation();
-        		LineTraceEnd = LineTraceStart + FVector(0, 0, -300);
-        
-        		bool HitSomething=GetWorld()->LineTraceSingleByChannel(Hit, LineTraceStart, LineTraceEnd, ECollisionChannel::ECC_Visibility);
+        			if(!IsDrumming)
+        			{
+        				if (WeaponNumber == 2)
+        				{
+        					IsDrumming = true;
+        					GetCharacterMovement()->MovementMode = EMovementMode::MOVE_None;
+        					GetWorldTimerManager().SetTimer(Handle, this, &ABardPlayer::ActivateMovement,1.f,false,2.f);
+        					GetWorldTimerManager().SetTimer(DrumAOEHandle, this, &ABardPlayer::SpawnDrumAOE,1.f,false,1.2);
+        					DrumAnimation=true;
+        					PlayAnimMontage(DrumAttack);
+        					if (SpawnedFlute)
+        					{
+        						SpawnedFlute->Destroy();
+        						SpawnedFlute = nullptr;
+        					}
+        					LineTraceStart = DrumSpawn->GetComponentLocation();
+        					LineTraceEnd = LineTraceStart + FVector(0, 0, -300);
+                                
+        					bool HitSomething=GetWorld()->LineTraceSingleByChannel(Hit, LineTraceStart, LineTraceEnd, ECollisionChannel::ECC_Visibility);
+                                		
+        					if(HitSomething)
+        					{
+        						if(!SpawnedDrum)
+        							SpawnedDrum = GetWorld()->SpawnActor<AActor>(Drum, FVector(Hit.Location), GetCharacterMovement()->GetLastUpdateRotation());
+        					}
+        					else { GEngine->AddOnScreenDebugMessage(0, 2.f, FColor::Red, "Failed"); }
+                                			
+        					DrumStick1 = GetWorld()->SpawnActor<AActor>(DrumStick_BP,Position,FRotator::ZeroRotator);
+        					DrumStick2 = GetWorld()->SpawnActor<AActor>(DrumStick_BP,Position,FRotator::ZeroRotator);
+        					DrumStick1->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetIncludingScale,"DrumStickL");
+        					DrumStick2->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetIncludingScale,"DrumStickR");
+                                			
+        				}
+        			}
         		
-        		if(HitSomething)
-        		{
-        			if(!SpawnedDrum)
-        				SpawnedDrum = GetWorld()->SpawnActor<AActor>(Drum, FVector(Hit.Location), GetCharacterMovement()->GetLastUpdateRotation());
-        		}
-        		else { GEngine->AddOnScreenDebugMessage(0, 2.f, FColor::Red, "Failed"); }
-        			
-        			DrumStick1 = GetWorld()->SpawnActor<AActor>(DrumStick_BP,Position,FRotator::ZeroRotator);
-        			DrumStick2 = GetWorld()->SpawnActor<AActor>(DrumStick_BP,Position,FRotator::ZeroRotator);
-        			DrumStick1->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetIncludingScale,"DrumStickL");
-        			DrumStick2->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetIncludingScale,"DrumStickR");
-        			
-        	}
         		if (WeaponNumber==3)
         		{
         			if(SpawnedFlute)
@@ -196,11 +200,8 @@ void ABardPlayer::CombatFunction()
         				if(SpawnedHarp)
         					PlayAnimMontage(HarpAttack,1);
 
+        			}
         		}
-        		}
-	}
-	
-		
 	}
 	
 }
@@ -276,7 +277,7 @@ void ABardPlayer::CombatFunctionRelease()
 
 void ABardPlayer::Weaponswap()
 {
-	if(!IsDrumming)
+	if(!DrumAnimation)
 	{
 		if(!IsFluting)
 		{
@@ -387,6 +388,12 @@ void ABardPlayer::DespawnHarp()
 	if(SpawnedHarp)
 	SpawnedHarp->Destroy();
 	SpawnedHarp=nullptr;
+	GetWorldTimerManager().ClearTimer(Handle);
+}
+
+void ABardPlayer::DrumAgain()
+{
+	IsDrumming=false;
 	GetWorldTimerManager().ClearTimer(Handle);
 }
 

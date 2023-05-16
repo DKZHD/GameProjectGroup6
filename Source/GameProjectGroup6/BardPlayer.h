@@ -121,6 +121,8 @@ public:
 	void PauseFunction();
 	UFUNCTION()
 	void DespawnHarp();
+	UFUNCTION()
+	void DrumAgain();
 	
 	//Variables
 	UPROPERTY()
@@ -133,7 +135,7 @@ public:
 	FRotator Direction;
 	UPROPERTY()
 	float AnimDuration;
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UPROPERTY()
 	bool IsDrumming;
 	UPROPERTY()
 	bool IsFluting;
@@ -148,6 +150,8 @@ public:
 	ACustomHUD* CustomHUD;
 	UPROPERTY()
 	float TimeSpent;
+	UPROPERTY(BlueprintReadOnly)
+	bool DrumAnimation;
 	
 	//Animations
 	UPROPERTY()
