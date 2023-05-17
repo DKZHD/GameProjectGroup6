@@ -209,7 +209,6 @@ void AEnemy::AnimNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayloa
 	if(NotifyName=="Shoot")
     {
         FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Bard->GetActorLocation());
-		GEngine->AddOnScreenDebugMessage(0,2.f,FColor::Cyan,"Shot");
         ArrowRef = GetWorld()->SpawnActor<AArrow>(Arrow, GetActorLocation()+FVector(75,0,0), FRotator(0,Rotation.Yaw,0));
     }
 	if(NotifyName=="ShootEnd")
