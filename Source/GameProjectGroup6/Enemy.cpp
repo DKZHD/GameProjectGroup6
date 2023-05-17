@@ -170,7 +170,7 @@ void AEnemy::AttackFunction()
 
 void AEnemy::BowAttackFunction()
 {
-	if(CanShoot)
+	if(CanShoot && !IsStunned)
 	{
 		PlayAnimMontage(BowMontage);
 		CanShoot = false;
