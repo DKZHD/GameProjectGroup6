@@ -40,7 +40,7 @@ void AMainTriggerBox::BeginPlay()
 void AMainTriggerBox::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
 {
 	Player = Cast<ABardPlayer>(OtherActor);
-	if (Enemy)
+	if (Player)
 	{
 		for (int i = 0 ; i < InGameSpawnPoints.Num(); i++)
 		{
@@ -50,13 +50,15 @@ void AMainTriggerBox::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor
 		{
 			AllSpawnedEnemies[i]->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 		}
+		this->Destroy();
 	}
 	
-	this->Destroy();
+	
 }
 
 void AMainTriggerBox::SpawnEnemy(USceneComponent* SpawnPoint)
 {
 	Enemy = GetWorld()->SpawnActor<AEnemy>(Enemy_BP, SpawnPoint->GetComponentLocation(), FRotator::ZeroRotator);
 	AllSpawnedEnemies.Add(Enemy);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Enemy Spawned")));
 }
