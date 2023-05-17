@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Arrow.generated.h"
 
+class AEnemyAIController;
 class UNiagaraComponent;
 class UProjectileMovementComponent;
 class UBoxComponent;
@@ -35,6 +36,9 @@ public:
 	TSubclassOf<UDamageType> DamageType;
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* Root;
+	UPROPERTY(EditAnywhere)
+	AEnemyAIController* EnemyController;
+	
 
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

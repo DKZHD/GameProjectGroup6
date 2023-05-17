@@ -4,10 +4,12 @@
 #include "Arrow.h"
 
 #include "Enemy.h"
+#include "BardPlayer.h"
 #include "NiagaraComponent.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "EnemyAIController.h"
 
 // Sets default values
 AArrow::AArrow()
@@ -38,7 +40,8 @@ AArrow::AArrow()
 void AArrow::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+
 }
 
 // Called every frame
@@ -53,5 +56,8 @@ void AArrow::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 {
 	if(OtherActor->IsA<AEnemy>())
 	UGameplayStatics::ApplyDamage(OtherActor,Damage,UGameplayStatics::GetPlayerController(this,0),this,DamageType);
+
+	if(OtherActor->IsA<ABardPlayer>())
+		UGameplayStatics::ApplyDamage(OtherActor,Damage,EnemyController,this,DamageType);
 }
 

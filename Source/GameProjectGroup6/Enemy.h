@@ -96,8 +96,11 @@ public:
 	UPROPERTY()
 	bool ItHit;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy") 
 	bool CanShoot;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
+	bool BowEnemy;
 
 	//Refference to the item
 	UPROPERTY()

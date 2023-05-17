@@ -13,6 +13,7 @@
 #include "Components/SphereComponent.h"
 #include "EnemyAIController.h"
 #include "Arrow.h"
+#include "Components/BoxComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
 
@@ -113,7 +114,7 @@ void AEnemy::OnRadialDamage(AActor* DamagedActor, float Damage, const UDamageTyp
 	GEngine->AddOnScreenDebugMessage(0, 2.f, FColor::Red, "Yay!");
 	this->LaunchCharacter(FVector(0, 0, 750.f), true, false);
 	IsStunned = true;
-	CanAttack = false;
+	CanShoot = true;
 	GetWorldTimerManager().SetTimer(Handle, this, &AEnemy::ResetStun, 1, false, 3.f);
 	GetWorldTimerManager().SetTimer(GravityHandle, this, &AEnemy::ChangeMovementMode, 1, false, .6);
 }
@@ -121,7 +122,8 @@ void AEnemy::OnRadialDamage(AActor* DamagedActor, float Damage, const UDamageTyp
 void AEnemy::OnAnyDamageTaken(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
 	UGameplayStatics::PlaySound2D(GetWorld(),DamageSound,1,1);
-	PlayAnimMontage(GoblinHit);
+	if(!BowEnemy)
+		PlayAnimMontage(GoblinHit);
 }
 
 // Change movement mode to none
@@ -172,8 +174,8 @@ void AEnemy::BowAttackFunction()
 {
 	if(CanShoot && !IsStunned)
 	{
-		PlayAnimMontage(BowMontage);
 		CanShoot = false;
+		PlayAnimMontage(BowMontage);
 	}
 }
 void AEnemy::WhenCompleted(UAnimMontage* Montage, bool bInterrupted)
@@ -207,13 +209,14 @@ void AEnemy::AnimNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayloa
 		Collider->SetCollisionProfileName("NoCollision");
 	}
 	if(NotifyName=="Shoot")
-    {
-        FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Bard->GetActorLocation());
-        ArrowRef = GetWorld()->SpawnActor<AArrow>(Arrow, GetActorLocation()+FVector(75,0,0), FRotator(0,Rotation.Yaw,0));
-    }
+	{
+		FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Bard->GetActorLocation());
+		FVector Direction = Rotation.Vector();
+		ArrowRef = GetWorld()->SpawnActor<AArrow>(Arrow, GetActorLocation() + Direction*150, FRotator(0,Rotation.Yaw,0));
+	}
 	if(NotifyName=="ShootEnd")
 	{
-		CanShoot = true;
+		CanAttack = true;
 	}
 }
 
