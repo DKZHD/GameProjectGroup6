@@ -127,8 +127,10 @@ void ABardPlayer::Movement(const FInputActionValue& Value)
 void ABardPlayer::ActivateMovement()
 {
 	GetCharacterMovement()->MovementMode = EMovementMode::MOVE_Walking;
-	SpawnedDrum = nullptr;
+	if(SpawnedDrum)
 	DrumCooldown=7;
+	SpawnedHarp=nullptr;
+	SpawnedDrum = nullptr;
 	DrumAnimation=false;
 	GetWorldTimerManager().ClearTimer(Handle);
 	GetWorldTimerManager().SetTimer(Handle, this, &ABardPlayer::DrumAgain,1.f,false,7.f);
@@ -200,6 +202,8 @@ void ABardPlayer::CombatFunction()
         				SpawnedFlute->Destroy();
         				SpawnedFlute = nullptr;
         			}
+        				GetCharacterMovement()->SetMovementMode(MOVE_None);
+        				IsHarping=true;
         				SpawnedHarp=GetWorld()->SpawnActor<AActor>(Harp,HarpSpawn->GetComponentLocation(),GetCharacterMovement()->GetLastUpdateRotation());
         				if(SpawnedHarp)
         					PlayAnimMontage(HarpAttack,1);
@@ -239,17 +243,23 @@ void ABardPlayer::CombatFunctionRelease()
 {
 	if(WeaponNumber==3)
 	{
+		
+		
 		if(TimeSpent<1)
 		{
 			StopAnimMontage();
+			GetCharacterMovement()->MovementMode = EMovementMode::MOVE_Walking;
+			ArrowRef=nullptr;
 			if(SpawnedHarp)
-			DespawnHarp();
+				DespawnHarp();
+			
 		}
 		if(TimeSpent < 2 && TimeSpent > 1)
 		{
 			UGameplayStatics::PlaySound2D(this, HarpReleased1);
 			StopAnimMontage();
 			PlayAnimMontage(HarpRelease);
+			GetCharacterMovement()->MovementMode = EMovementMode::MOVE_Walking;
 			ArrowRef=GetWorld()->SpawnActor<AArrow>(Arrow,GetActorLocation()+FVector(75,0,0),GetCharacterMovement()->GetLastUpdateRotation());
 			if(ArrowRef)
 				ArrowRef->Damage=1.f;
@@ -259,6 +269,7 @@ void ABardPlayer::CombatFunctionRelease()
 			UGameplayStatics::PlaySound2D(this, HarpReleased2);
 			StopAnimMontage();
 			PlayAnimMontage(HarpRelease);
+			GetCharacterMovement()->MovementMode = EMovementMode::MOVE_Walking;
 			ArrowRef=GetWorld()->SpawnActor<AArrow>(Arrow,GetActorLocation()+FVector(75,0,0),GetCharacterMovement()->GetLastUpdateRotation());
 			if(ArrowRef)
 				ArrowRef->Damage=2.f;
@@ -268,6 +279,7 @@ void ABardPlayer::CombatFunctionRelease()
 			UGameplayStatics::PlaySound2D(this, HarpReleased3);
 			StopAnimMontage();
 			PlayAnimMontage(HarpRelease);
+			GetCharacterMovement()->MovementMode = EMovementMode::MOVE_Walking;
 			ArrowRef=GetWorld()->SpawnActor<AArrow>(Arrow,GetActorLocation()+FVector(75,0,0),GetCharacterMovement()->GetLastUpdateRotation());
 			if(ArrowRef)
 				ArrowRef->Damage=3.f;
@@ -281,17 +293,23 @@ void ABardPlayer::CombatFunctionRelease()
 
 void ABardPlayer::Weaponswap()
 {
-	if(!DrumAnimation)
+	if(!IsHarping)
 	{
-		if(!IsFluting)
-		{
-			WeaponNumber++;
-			UUI* UIref=Cast<UUI>(CustomHUD->UIWidget);
-			UIref->ChangeUIPicture();
-		}	
+		if(!DrumAnimation)
+     	{
+     		if(!IsFluting)
+     		{
+     			WeaponNumber++;
+     			UUI* UIref=Cast<UUI>(CustomHUD->UIWidget);
+     			UIref->ChangeUIPicture();
+     			if (WeaponNumber > 3)
+     				WeaponNumber = 1;
+     		}	
+     	}
+		
 	}
-	if (WeaponNumber > 3)
-			WeaponNumber = 1;
+
+	
 }
 
 void ABardPlayer::PauseFunction()
@@ -305,7 +323,7 @@ void ABardPlayer::PauseFunction()
 //Animation Functions
 void ABardPlayer::PlayHitAnim(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
-	if(!IsHarping&&WeaponNumber!=3)
+	if(!IsHarping&&WeaponNumber!=3||!IsDrumming&&WeaponNumber!=2)
 	{
 		PlayAnimMontage(HitAnim);
 	}
@@ -361,7 +379,7 @@ void ABardPlayer::WhenCompleted(UAnimMontage* Montage, bool bInterrupted)
 			DrumStick1->Destroy();
 			DrumStick2->Destroy();
 		}
-		if(Montage==HarpAttack)
+		if(Montage==HarpRelease)
 		{
 			ArrowRef=nullptr;
 			if(SpawnedHarp)
@@ -375,13 +393,6 @@ void ABardPlayer::WhenCompleted(UAnimMontage* Montage, bool bInterrupted)
 		{
 			FluteRef->FluteCollision->SetCollisionProfileName("NoCollision");
 			IsFluting=false;
-		}
-		if(Montage==HarpAttack)
-		{
-			ArrowRef=nullptr;
-			if(SpawnedHarp)
-			DespawnHarp();
-			IsHarping=false;
 		}
 	}
 }
@@ -400,7 +411,7 @@ void ABardPlayer::DespawnHarp()
 	if(SpawnedHarp)
 	SpawnedHarp->Destroy();
 	SpawnedHarp=nullptr;
-	GetWorldTimerManager().ClearTimer(Handle);
+	IsHarping=false;
 }
 
 void ABardPlayer::DrumAgain()
