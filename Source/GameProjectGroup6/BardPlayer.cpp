@@ -191,7 +191,7 @@ void ABardPlayer::CombatFunction()
         						SpawnedFlute = nullptr;
         					}
         					LineTraceStart = DrumSpawn->GetComponentLocation();
-        					LineTraceEnd = LineTraceStart + FVector(0, 0, -60);
+        					LineTraceEnd = LineTraceStart + FVector(0, 0, -300);
                                 
         					bool HitSomething=GetWorld()->LineTraceSingleByChannel(Hit, LineTraceStart, LineTraceEnd, ECollisionChannel::ECC_Visibility);
                                 		
