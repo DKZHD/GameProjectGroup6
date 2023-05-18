@@ -112,8 +112,8 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AEnemy::OnRadialDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, FVector Origin, FHitResult HitInfo, AController* InstigatedBy, AActor* DamageCauser)
 {
 	this->LaunchCharacter(FVector(0, 0, 750.f), true, false);
+	StopAnimMontage();
 	IsStunned = true;
-	CanShoot = true;
 	GetWorldTimerManager().SetTimer(Handle, this, &AEnemy::ResetStun, 1, false, 3.f);
 	GetWorldTimerManager().SetTimer(GravityHandle, this, &AEnemy::ChangeMovementMode, 1, false, .6);
 }
@@ -136,6 +136,7 @@ void AEnemy::ChangeMovementMode()
 void AEnemy::ResetStun()
 {
 	IsStunned = false;
+	CanShoot = true;
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 	GetWorldTimerManager().ClearTimer(Handle);
 }
