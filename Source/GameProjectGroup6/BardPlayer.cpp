@@ -179,12 +179,6 @@ void ABardPlayer::CombatFunction()
         			{
         				if (WeaponNumber == 2)
         				{
-        					IsDrumming = true;
-        					GetCharacterMovement()->MovementMode = EMovementMode::MOVE_None;
-        					GetWorldTimerManager().SetTimer(Handle, this, &ABardPlayer::ActivateMovement,1.f,false,2.f);
-        					GetWorldTimerManager().SetTimer(DrumAOEHandle, this, &ABardPlayer::SpawnDrumAOE,1.f,false,1.2);
-        					DrumAnimation=true;
-        					PlayAnimMontage(DrumAttack);
         					if (SpawnedFlute)
         					{
         						SpawnedFlute->Destroy();
@@ -199,12 +193,18 @@ void ABardPlayer::CombatFunction()
         					{
         						if(!SpawnedDrum)
         							SpawnedDrum = GetWorld()->SpawnActor<AActor>(Drum, FVector(Hit.Location), GetCharacterMovement()->GetLastUpdateRotation());
-        					}
-        					
+							IsDrumming = true;
+        					GetCharacterMovement()->MovementMode = EMovementMode::MOVE_None;
+        					GetWorldTimerManager().SetTimer(Handle, this, &ABardPlayer::ActivateMovement,1.f,false,2.f);
+        					GetWorldTimerManager().SetTimer(DrumAOEHandle, this, &ABardPlayer::SpawnDrumAOE,1.f,false,1.2);
+        					DrumAnimation=true;
+        					PlayAnimMontage(DrumAttack);
+
         					DrumStick1 = GetWorld()->SpawnActor<AActor>(DrumStick_BP,Position,FRotator::ZeroRotator);
         					DrumStick2 = GetWorld()->SpawnActor<AActor>(DrumStick_BP,Position,FRotator::ZeroRotator);
         					DrumStick1->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetIncludingScale,"DrumStickL");
         					DrumStick2->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetIncludingScale,"DrumStickR");
+        					}
         				}
         			}
         		
