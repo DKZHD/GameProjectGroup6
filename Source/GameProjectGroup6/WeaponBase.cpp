@@ -43,7 +43,6 @@ void AWeaponBase::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 		if(OtherComp==Enemy->GetCapsuleComponent())
 		{
 			UGameplayStatics::ApplyDamage(OtherActor,.5,UGameplayStatics::GetPlayerController(GetWorld(),0),this,BaseDamage);
-			GEngine->AddOnScreenDebugMessage(-1,2.f,FColor::Magenta,"It weeee Hit!");
 		}
 	}
 }

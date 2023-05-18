@@ -18,7 +18,6 @@
 #include "UI.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/BoxComponent.h"
-#include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -155,7 +154,6 @@ void ABardPlayer::CombatFunction()
         				SpawnedFlute=GetWorld()->SpawnActor<AActor>(Flute, Position, FRotator(90,0,0));
         				FluteRef=Cast<AWeaponBase>(SpawnedFlute);
         			}
-        				FluteRef->FluteCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
         				IsFluting=true;
         				SpawnedFlute->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("FluteSocket"));
         			
@@ -186,8 +184,7 @@ void ABardPlayer::CombatFunction()
         						if(!SpawnedDrum)
         							SpawnedDrum = GetWorld()->SpawnActor<AActor>(Drum, FVector(Hit.Location), GetCharacterMovement()->GetLastUpdateRotation());
         					}
-        					else { GEngine->AddOnScreenDebugMessage(0, 2.f, FColor::Red, "Failed"); }
-                                			
+        					
         					DrumStick1 = GetWorld()->SpawnActor<AActor>(DrumStick_BP,Position,FRotator::ZeroRotator);
         					DrumStick2 = GetWorld()->SpawnActor<AActor>(DrumStick_BP,Position,FRotator::ZeroRotator);
         					DrumStick1->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetIncludingScale,"DrumStickL");
@@ -202,7 +199,6 @@ void ABardPlayer::CombatFunction()
         				SpawnedFlute->Destroy();
         				SpawnedFlute = nullptr;
         			}
-        				GetCharacterMovement()->SetMovementMode(MOVE_None);
         				IsHarping=true;
         				SpawnedHarp=GetWorld()->SpawnActor<AActor>(Harp,HarpSpawn->GetComponentLocation(),GetCharacterMovement()->GetLastUpdateRotation());
         				if(SpawnedHarp)
@@ -244,11 +240,9 @@ void ABardPlayer::CombatFunctionRelease()
 	if(WeaponNumber==3)
 	{
 		
-		
 		if(TimeSpent<1)
 		{
 			StopAnimMontage();
-			GetCharacterMovement()->MovementMode = EMovementMode::MOVE_Walking;
 			ArrowRef=nullptr;
 			if(SpawnedHarp)
 				DespawnHarp();
@@ -259,7 +253,6 @@ void ABardPlayer::CombatFunctionRelease()
 			UGameplayStatics::PlaySound2D(this, HarpReleased1);
 			StopAnimMontage();
 			PlayAnimMontage(HarpRelease);
-			GetCharacterMovement()->MovementMode = EMovementMode::MOVE_Walking;
 			ArrowRef=GetWorld()->SpawnActor<AArrow>(Arrow,GetActorLocation()+FVector(75,0,0),GetCharacterMovement()->GetLastUpdateRotation());
 			if(ArrowRef)
 				ArrowRef->Damage=1.f;
@@ -269,7 +262,6 @@ void ABardPlayer::CombatFunctionRelease()
 			UGameplayStatics::PlaySound2D(this, HarpReleased2);
 			StopAnimMontage();
 			PlayAnimMontage(HarpRelease);
-			GetCharacterMovement()->MovementMode = EMovementMode::MOVE_Walking;
 			ArrowRef=GetWorld()->SpawnActor<AArrow>(Arrow,GetActorLocation()+FVector(75,0,0),GetCharacterMovement()->GetLastUpdateRotation());
 			if(ArrowRef)
 				ArrowRef->Damage=2.f;
@@ -279,7 +271,6 @@ void ABardPlayer::CombatFunctionRelease()
 			UGameplayStatics::PlaySound2D(this, HarpReleased3);
 			StopAnimMontage();
 			PlayAnimMontage(HarpRelease);
-			GetCharacterMovement()->MovementMode = EMovementMode::MOVE_Walking;
 			ArrowRef=GetWorld()->SpawnActor<AArrow>(Arrow,GetActorLocation()+FVector(75,0,0),GetCharacterMovement()->GetLastUpdateRotation());
 			if(ArrowRef)
 				ArrowRef->Damage=3.f;
@@ -323,7 +314,7 @@ void ABardPlayer::PauseFunction()
 //Animation Functions
 void ABardPlayer::PlayHitAnim(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
-	if(!IsHarping&&WeaponNumber!=3||!IsDrumming&&WeaponNumber!=2)
+	if(!IsHarping&&!IsDrumming)
 	{
 		PlayAnimMontage(HitAnim);
 	}
@@ -346,9 +337,9 @@ void ABardPlayer::AnimNotifyBegin(FName NotifyName, const FBranchingPointNotifyP
 	if(NotifyName=="1st")
 		FluteRef->FluteCollision->SetCollisionProfileName("NoCollision");
 	if(NotifyName=="2nd")
-		FluteRef->FluteCollision->SetCollisionProfileName("OverlapAllDynamic");
+		FluteRef->FluteCollision->SetCollisionProfileName("OverlapOnlyPawn");
 	if(NotifyName=="Start")
-		FluteRef->FluteCollision->SetCollisionProfileName("OverlapAllDynamic");
+		FluteRef->FluteCollision->SetCollisionProfileName("OverlapOnlyPawn");
 	if(NotifyName=="End")
 		FluteRef->FluteCollision->SetCollisionProfileName("NoCollision");
 	//DrumNotifies
