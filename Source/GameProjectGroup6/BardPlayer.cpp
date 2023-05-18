@@ -21,7 +21,6 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "Particles/Collision/ParticleModuleCollisionGPU.h"
 
 // Sets default values
 ABardPlayer::ABardPlayer()
@@ -192,7 +191,7 @@ void ABardPlayer::CombatFunction()
         						SpawnedFlute = nullptr;
         					}
         					LineTraceStart = DrumSpawn->GetComponentLocation();
-        					LineTraceEnd = LineTraceStart + FVector(0, 0, -300);
+        					LineTraceEnd = LineTraceStart + FVector(0, 0, -60);
                                 
         					bool HitSomething=GetWorld()->LineTraceSingleByChannel(Hit, LineTraceStart, LineTraceEnd, ECollisionChannel::ECC_Visibility);
                                 		

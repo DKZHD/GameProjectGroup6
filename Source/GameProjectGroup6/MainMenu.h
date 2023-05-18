@@ -41,4 +41,6 @@ public:
 		void SettingsButton();
 	UFUNCTION()
 		void EndGameClicked();
+	UFUNCTION()
+		void RemoveMainMenu();
 };

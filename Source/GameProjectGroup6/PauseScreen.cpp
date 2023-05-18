@@ -30,6 +30,7 @@ void UPauseScreen::NativeConstruct()
 //When Resume is clicked
 void UPauseScreen::ResumeButtonClicked()
 {
+	Bard->IsOpen=false;
 	UGameplayStatics::PlaySound2D(this,ClickSound);
 	UGameplayStatics::SetGamePaused(this, false);
 	UGameplayStatics::GetPlayerController(this,0)->SetShowMouseCursor(false);

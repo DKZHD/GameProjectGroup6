@@ -21,7 +21,7 @@ void UMainMenu::NativeConstruct()
 void UMainMenu::StartGameButtonClicked()
 {
 	UWidgetLayoutLibrary::RemoveAllWidgets(GetWorld());
-	UGameplayStatics::GetPlayerCameraManager(this,0)->StartCameraFade(0,1,2,FLinearColor::Black);
+	UGameplayStatics::GetPlayerCameraManager(this,0)->StartCameraFade(0,1,4,FLinearColor::Black);
 	UGameplayStatics::OpenLevel(GetWorld(), "NewMap_lvl_1",true);
 }
 
@@ -38,4 +38,9 @@ void UMainMenu::SettingsButton()
 void UMainMenu::EndGameClicked()
 {
 	UKismetSystemLibrary::QuitGame(GetWorld(),UGameplayStatics::GetPlayerController(GetWorld(),0),EQuitPreference::Quit,false);
+}
+
+void UMainMenu::RemoveMainMenu()
+{
+	
 }
