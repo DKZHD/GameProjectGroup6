@@ -48,6 +48,7 @@ AEnemy::AEnemy()
 	Collider->SetCollisionProfileName("OverlapOnlyPawn");
 	Collider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	ItHit = true;
+	CanAttack = true;
 
 	Bow = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Bow"));
 	Bow->SetupAttachment(GetMesh(), "BowSocket");
@@ -126,7 +127,7 @@ void AEnemy::OnAnyDamageTaken(AActor* DamagedActor, float Damage, const class UD
 		PlayAnimMontage(GoblinHit);
 		GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 	}
-		
+	CanAttack = true;
 }
 
 // Change movement mode to none
@@ -169,7 +170,11 @@ void AEnemy::Die()
 
 void AEnemy::AttackFunction()
 {
-	PlayAnimMontage(HitMontage);
+	if(CanAttack)
+	{
+		PlayAnimMontage(HitMontage);
+	}
+	
 }
 
 void AEnemy::BowAttackFunction()
@@ -213,10 +218,12 @@ void AEnemy::AnimNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayloa
 	if(NotifyName=="HitStart")
 	{
 		GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+		CanAttack = false;
 	}
 	if(NotifyName=="HitEnd")
 	{
 		GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+		CanAttack = true;
 	}
 	if(NotifyName=="Shoot")
 	{
