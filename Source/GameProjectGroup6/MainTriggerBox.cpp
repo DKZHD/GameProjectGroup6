@@ -50,7 +50,7 @@ void AMainTriggerBox::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor
 		{
 			AllSpawnedEnemies[i]->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 		}
-		this->Destroy();
+		Destroy();
 	}
 	
 	
@@ -60,5 +60,4 @@ void AMainTriggerBox::SpawnEnemy(USceneComponent* SpawnPoint)
 {
 	Enemy = GetWorld()->SpawnActor<AEnemy>(Enemy_BP, SpawnPoint->GetComponentLocation(), FRotator::ZeroRotator);
 	AllSpawnedEnemies.Add(Enemy);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Enemy Spawned")));
 }

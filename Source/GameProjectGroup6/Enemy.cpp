@@ -111,7 +111,6 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 // When actor take radial damage
 void AEnemy::OnRadialDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, FVector Origin, FHitResult HitInfo, AController* InstigatedBy, AActor* DamageCauser)
 {
-	GEngine->AddOnScreenDebugMessage(0, 2.f, FColor::Red, "Yay!");
 	this->LaunchCharacter(FVector(0, 0, 750.f), true, false);
 	IsStunned = true;
 	CanShoot = true;
@@ -144,13 +143,11 @@ void AEnemy::ResetStun()
 // Going to run death animation and destroy the actor
 void AEnemy::Die()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Dead");
 	this->Destroy();
 
 	Droprate = FMath::RandRange(1,2);
 	if(Droprate == 1)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Dropped");
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Owner = this;
 		SpawnParams.Instigator = GetInstigator();

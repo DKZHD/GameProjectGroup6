@@ -38,6 +38,8 @@ public:
 	UStaticMeshComponent* Root;
 	UPROPERTY(EditAnywhere)
 	AEnemyAIController* EnemyController;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Arrow")
+	bool EnemyFired;
 	
 
 	UFUNCTION()

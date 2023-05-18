@@ -18,12 +18,15 @@ AArrow::AArrow()
 	PrimaryActorTick.bCanEverTick = true;
 	Root = CreateDefaultSubobject<UStaticMeshComponent>("Root");
 	SetRootComponent(Root);
+	Root->SetCollisionProfileName("IgnoreOnlyPawn");
 	
 	ArrowMesh=CreateDefaultSubobject<UStaticMeshComponent>("ArrowMesh");
 	ArrowMesh->SetupAttachment(GetRootComponent());
+	ArrowMesh->SetCollisionProfileName("IgnoreOnlyPawn");
 
 	CollisionBox=CreateDefaultSubobject<UBoxComponent>("Collision");
 	CollisionBox->SetupAttachment(ArrowMesh);
+	CollisionBox->SetCollisionProfileName("OverlapOnlyPawn");
 
 	Particle=CreateDefaultSubobject<UNiagaraComponent>("Trail");
 	Particle->SetupAttachment(ArrowMesh);
@@ -54,10 +57,18 @@ void AArrow::Tick(float DeltaTime)
 void AArrow::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if(!EnemyFired)
+	{
 	if(OtherActor->IsA<AEnemy>())
 	UGameplayStatics::ApplyDamage(OtherActor,Damage,UGameplayStatics::GetPlayerController(this,0),this,DamageType);
-
-	if(OtherActor->IsA<ABardPlayer>())
-		UGameplayStatics::ApplyDamage(OtherActor,Damage,EnemyController,this,DamageType);
+	}
+	if(EnemyFired)
+	{
+		if(OtherActor->IsA<ABardPlayer>())
+		{
+			UGameplayStatics::ApplyDamage(OtherActor,Damage,EnemyController,this,DamageType);
+			Destroy();
+		}
+	}
 }
 

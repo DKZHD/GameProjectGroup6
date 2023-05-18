@@ -51,8 +51,6 @@ void AItems::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 		//Check if the overlapping component is the bard player
 		if(OtherActor->IsA<ABardPlayer>())
 		{
-			GEngine->AddOnScreenDebugMessage(0,2.f,FColor::Magenta,"Collide");
-			
 			//Check if the bard player's health is less than 5
 			if(Bard->DamageHandlingComponent->Health < 5)
 			{
