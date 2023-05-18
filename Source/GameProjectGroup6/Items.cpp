@@ -6,6 +6,7 @@
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "DamageHandlingComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 // Sets default values
 AItems::AItems()
@@ -56,6 +57,10 @@ void AItems::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 			{
 				//Add 1 to the bard player's health
 				FMath::Clamp(Bard->DamageHandlingComponent->Health +=1, 0, 5);
+				//Spawn the particle effect
+				UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), SpawnHealth, Bard->GetActorLocation(), FRotator(0,-90,0));
+				//Spawn Sound for pickup
+				UGameplayStatics::PlaySound2D(GetWorld(), HealSound);
 				//Destroy the item
 				this -> Destroy();
 			}

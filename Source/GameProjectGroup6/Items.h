@@ -10,6 +10,8 @@ class USkeletalMeshComponent;
 class USphereComponent;
 class UDamageHandlingComponent;
 class ABardPlayer;
+class UNiagaraSystem;
+class USoundBase;
 
 UCLASS()
 class GAMEPROJECTGROUP6_API AItems : public AActor
@@ -44,6 +46,12 @@ public:
 	//Bard Player
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	ABardPlayer* Bard;
+
+	UPROPERTY(EditAnywhere, Category="Item")
+	UNiagaraSystem* SpawnHealth;
+
+	UPROPERTY(EditAnywhere, Category="Item")
+	USoundBase* HealSound;
 
 
 	//On overlap function
