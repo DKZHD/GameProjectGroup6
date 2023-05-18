@@ -3,6 +3,7 @@
 
 #include "DamageHandlingComponent.h"
 
+#include "NiagaraFunctionLibrary.h"
 #include "Engine/Engine.h"
 
 // Sets default values for this component's properties
@@ -30,6 +31,13 @@ void UDamageHandlingComponent::BeginPlay()
 //When Owner takes any amount how damage
 void UDamageHandlingComponent::TakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
+	FVector Start=GetOwner()->GetActorLocation();
+	FVector End=GetOwner()->GetActorLocation()-FVector(0,0,100);
+	bool LinetraceHit=GetWorld()->LineTraceSingleByChannel(Hit,Start,End,ECC_Visibility);
+
+	// Hit.Location+FVector(0,0,1)
+	if(LinetraceHit)
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),Blood,GetOwner()->GetActorLocation());
 	Health -= Damage;
 	if (Health < 1)
 	{

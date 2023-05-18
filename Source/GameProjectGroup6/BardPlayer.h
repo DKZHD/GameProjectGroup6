@@ -206,6 +206,8 @@ public:
 	USoundBase* HarpReleased2;
 	UPROPERTY(EditAnywhere, Category="Harp")
 	USoundBase* HarpReleased3;
+	UPROPERTY(EditAnywhere, Category="HitSounds")
+	USoundBase* HitSound;
 
 	//Bools for Sounds
 	UPROPERTY()

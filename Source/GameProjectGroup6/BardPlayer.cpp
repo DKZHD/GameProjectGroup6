@@ -318,7 +318,7 @@ void ABardPlayer::PlayHitAnim(AActor* DamagedActor, float Damage, const class UD
 	{
 		PlayAnimMontage(HitAnim);
 	}
-	
+	UGameplayStatics::PlaySound2D(GetWorld(),HitSound);
 	if(DamageHandlingComponent->Health<=0)
 	{
 		if(CustomHUD)

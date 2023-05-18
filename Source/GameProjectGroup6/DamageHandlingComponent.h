@@ -7,6 +7,8 @@
 #include "DamageHandlingComponent.generated.h"
 
 
+class UNiagaraSystem;
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class GAMEPROJECTGROUP6_API UDamageHandlingComponent : public UActorComponent
 {
@@ -28,7 +30,12 @@ public:
 	float DefaultHealth;
 	UPROPERTY(BlueprintReadWrite)
 	bool IsDead;
+	UPROPERTY()
+	FHitResult Hit;
 
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* Blood;
+	
 	//Functions
 	UFUNCTION()
 	void TakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
