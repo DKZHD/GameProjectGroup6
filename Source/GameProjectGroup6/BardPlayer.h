@@ -123,6 +123,8 @@ public:
 	void DespawnHarp();
 	UFUNCTION()
 	void DrumAgain();
+	UFUNCTION()
+	void Won();
 	
 	//Variables
 	UPROPERTY()
@@ -143,6 +145,12 @@ public:
 	bool IsFluting;
 	UPROPERTY()
 	bool IsHarping;
+	UPROPERTY()
+	bool IsWinning;
+	UPROPERTY()
+	int KillCount;
+	UPROPERTY()
+	int TotalEnemies;
 	UPROPERTY()
 	int WeaponNumber=1;
 	UPROPERTY()

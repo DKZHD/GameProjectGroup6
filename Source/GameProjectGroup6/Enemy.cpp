@@ -150,8 +150,9 @@ void AEnemy::ResetStun()
 void AEnemy::Die()
 {
 	this->Destroy();
+	Bard->KillCount++;
 
-	Droprate = FMath::RandRange(1,2);
+	Droprate = FMath::RandRange(1,5);
 	if(Droprate == 1)
 	{
 		FActorSpawnParameters SpawnParams;

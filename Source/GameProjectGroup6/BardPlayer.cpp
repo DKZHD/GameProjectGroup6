@@ -19,6 +19,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Particles/Collision/ParticleModuleCollisionGPU.h"
 
 // Sets default values
 ABardPlayer::ABardPlayer()
@@ -45,6 +46,9 @@ ABardPlayer::ABardPlayer()
 
 	DamageHandlingComponent = CreateDefaultSubobject<UDamageHandlingComponent>(TEXT("DamageHandlingComp"));
 	DamageHandlingComponent->Health=5;
+
+	KillCount = 0;
+	TotalEnemies = 32;
 	
 	//Possession
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
@@ -92,6 +96,17 @@ void ABardPlayer::Tick(float DeltaTime)
 
 	if(IsDrumming)
 		DrumCooldown-=DeltaTime;
+
+	if(KillCount>=TotalEnemies)
+	{
+		IsWinning = true;
+		if(IsWinning)
+		{
+			Won();
+			KillCount = 0;
+			IsWinning = false;
+		}
+	}
 }
 
 // Called to bind functionality to input
@@ -410,6 +425,11 @@ void ABardPlayer::DrumAgain()
 	IsDrumming=false;
 	DrumCooldown=0;
 	GetWorldTimerManager().ClearTimer(Handle);
+}
+
+void ABardPlayer::Won()
+{
+	
 }
 
 
