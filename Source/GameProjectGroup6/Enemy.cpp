@@ -122,7 +122,11 @@ void AEnemy::OnAnyDamageTaken(AActor* DamagedActor, float Damage, const class UD
 {
 	UGameplayStatics::PlaySound2D(GetWorld(),DamageSound,1,1);
 	if(!BowEnemy)
+	{
 		PlayAnimMontage(GoblinHit);
+		GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+	}
+		
 }
 
 // Change movement mode to none
@@ -205,6 +209,14 @@ void AEnemy::AnimNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayloa
 	if(NotifyName=="End")
 	{
 		Collider->SetCollisionProfileName("NoCollision");
+	}
+	if(NotifyName=="HitStart")
+	{
+		GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+	}
+	if(NotifyName=="HitEnd")
+	{
+		GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 	}
 	if(NotifyName=="Shoot")
 	{
