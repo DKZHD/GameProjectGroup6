@@ -125,6 +125,8 @@ public:
 	void DrumAgain();
 	UFUNCTION()
 	void Won();
+	UFUNCTION()
+	void ReturnToMain();
 	
 	//Variables
 	UPROPERTY()
@@ -162,6 +164,12 @@ public:
 	float TimeSpent;
 	UPROPERTY(BlueprintReadOnly)
 	bool DrumAnimation;
+	UPROPERTY()
+	bool IsOpen=false;
+
+
+	//InputMode
+	FInputModeGameOnly Game;
 	
 	//Animations
 	UPROPERTY()
@@ -190,6 +198,8 @@ public:
 	TSubclassOf<UUserWidget> PauseScreen;
 	UPROPERTY(EditAnywhere, Category="User Widgets")
 	TSubclassOf<UUserWidget> DeathScreen;
+	UPROPERTY(EditAnywhere, Category="User Widgets")
+	TSubclassOf<UUserWidget> WinScreen;
 	UPROPERTY()
 	UUserWidget* PauseScreenRef;
 

@@ -3,6 +3,7 @@
 #include "BardPlayer.h"
 
 #include "Arrow.h"
+#include "BardGameInstance.h"
 #include "CustomHUD.h"
 #include "DamageHandlingComponent.h"
 #include "EnhancedInputComponent.h"
@@ -15,6 +16,7 @@
 #include "WeaponBase.h"
 #include "NiagaraFunctionLibrary.h"
 #include "DrawDebugHelpers.h"
+#include "SettingsWidget.h"
 #include "UI.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/BoxComponent.h"
@@ -320,9 +322,27 @@ void ABardPlayer::Weaponswap()
 
 void ABardPlayer::PauseFunction()
 {
-	CustomHUD->UIWidget->RemoveFromParent();
-	PauseScreenRef=CreateWidget<UUserWidget>(GetWorld(),PauseScreen);
-	PauseScreenRef->AddToViewport(0);
+	
+	if(!IsOpen)
+	{
+		CustomHUD->UIWidget->RemoveFromParent();
+		PauseScreenRef=CreateWidget<UUserWidget>(GetWorld(),PauseScreen);
+		PauseScreenRef->AddToViewport(0);
+		IsOpen=true;
+	}
+	else
+	{
+		PauseScreenRef->RemoveFromParent();
+		if(CustomHUD->SettingsScreen)
+		CustomHUD->SettingsScreen->RemoveFromParent();
+		CustomHUD->UIWidget->AddToViewport(0);
+		UGameplayStatics::GetPlayerController(this,0)->SetShowMouseCursor(false);
+		UGameplayStatics::SetGamePaused(GetWorld(),false);
+		UGameplayStatics::GetPlayerController(this,0)->SetInputMode(Game);
+		IsOpen=false;
+	}
+
+	
 }
 
 
@@ -429,7 +449,19 @@ void ABardPlayer::DrumAgain()
 
 void ABardPlayer::Won()
 {
-	
+	UUserWidget* WinWidget=CreateWidget<UUserWidget>(GetWorld(),WinScreen);
+	CustomHUD->UIWidget->RemoveFromParent();
+	if(WinWidget)
+	WinWidget->AddToViewport(0);
+	GetWorldTimerManager().SetTimer(Handle,this,&ABardPlayer::ReturnToMain,1,false,10.f);
+}
+
+void ABardPlayer::ReturnToMain()
+{
+	UBardGameInstance* BardGameInstance=Cast<UBardGameInstance>(GetGameInstance());
+	BardGameInstance->HasSpawnedMainMenu=false;
+	UGameplayStatics::OpenLevel(GetWorld(),"MainMenuMap");
+	GetWorldTimerManager().ClearTimer(Handle);
 }
 
 

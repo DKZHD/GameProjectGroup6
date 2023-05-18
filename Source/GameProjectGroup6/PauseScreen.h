@@ -12,6 +12,7 @@
 class UButton;
 class UBardGameInstance;
 class ACustomHUD;
+class ABardPlayer;
 
 UCLASS()
 class GAMEPROJECTGROUP6_API UPauseScreen : public UUserWidget
@@ -41,12 +42,14 @@ class GAMEPROJECTGROUP6_API UPauseScreen : public UUserWidget
 
 	//Input Mode
 	FInputModeGameOnly Game;
-	FInputModeUIOnly UI;
+	FInputModeGameAndUI GameUI;
 
 	//Other
 	UPROPERTY()
 	UBardGameInstance* BardGameInstance;
 	UPROPERTY()
 	ACustomHUD* CustomHUD;
+	UPROPERTY()
+	ABardPlayer* Bard;
 
 };
