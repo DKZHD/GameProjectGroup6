@@ -8,6 +8,8 @@
 #include "EntitySystem/MovieSceneEntitySystemRunner.h"
 #include "Containers/UnrealString.h"
 #include "BardPlayer.h"
+#include "NiagaraFunctionLibrary.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 
@@ -49,6 +51,7 @@ void AMainTriggerBox::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor
 		for (int i = 0 ; i < AllSpawnedEnemies.Num(); i++)
 		{
 			AllSpawnedEnemies[i]->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+			AllSpawnedEnemies[i]->GetCapsuleComponent()->SetCollisionProfileName("Pawn");
 		}
 		Destroy();
 	}
@@ -60,4 +63,6 @@ void AMainTriggerBox::SpawnEnemy(USceneComponent* SpawnPoint)
 {
 	Enemy = GetWorld()->SpawnActor<AEnemy>(Enemy_BP, SpawnPoint->GetComponentLocation(), FRotator::ZeroRotator);
 	AllSpawnedEnemies.Add(Enemy);
+	Enemy->GetCapsuleComponent()->SetCollisionProfileName("NoCollision");
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), SpawnSmoke, SpawnPoint->GetComponentLocation(), FRotator::ZeroRotator);
 }

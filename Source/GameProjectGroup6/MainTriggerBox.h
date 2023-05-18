@@ -27,7 +27,13 @@ class GAMEPROJECTGROUP6_API AMainTriggerBox : public ATriggerBox
 	class AEnemy* Enemy;
 
 	UPROPERTY()
+	AEnemy* NewEnemy;
+
+	UPROPERTY()
 	class ABardPlayer* Player;
+	
+	UPROPERTY(EditAnywhere, Category="Smoke")
+	class UNiagaraSystem* SpawnSmoke;
 
 	UPROPERTY(BluePrintReadWrite, EditAnywhere, Category = "SpawnPoints")
 	FRotator SpawnRotation;
